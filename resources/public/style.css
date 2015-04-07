@@ -1,0 +1,58 @@
+* {
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+body {
+	background-image: url('music.jpg');
+	background-attachment: fixed;
+	background-size: 100% auto;
+}
+
+.layout {
+	display: block;
+	width: 1050px;
+	overflow: auto;
+	margin: 0 auto 0 auto;
+}
+
+.top {
+	background-color: rgba(0, 36, 47, 0.4);
+	float: left;
+	clear: none;
+	height: 200px;
+	width: 1050px;
+}
+
+.middle {
+	background-color: rgba(141, 221, 246, 0.4);
+	float: left;
+	clear: none;
+	height: 450px;
+	width: 1050px;
+}
+
+.center {
+	background-color: rgb(255, 255, 255);
+	float: left;
+	clear: none;
+	height: 600px;
+	width: 650px;
+}
+
+.right {
+	background-color: rgba(0, 36, 47, 0.4);
+	float: left;
+	clear: none;
+	height: 600px;
+	width: 400px;
+}
+
+.bottom {
+	background-color: rgba(0, 36, 47, 0.4);
+	float: left;
+	clear: none;
+	height: 100px;
+	width: 1050px;
+}
