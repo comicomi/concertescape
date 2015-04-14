@@ -8,5 +8,6 @@
                  [enlive "1.0.0"]
                  [http-kit "2.1.16"]
                  [cheshire "5.4.0"]
-                 [clj-http "1.1.0"]]
+                 [clj-http "1.1.0"]
+                 [org.clojure/data.csv "0.1.2"]]
   :main concertescape.core)
