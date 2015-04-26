@@ -8,11 +8,17 @@
   (require [clojure.data.csv :as csv])
   (require [clojure.java.io :as io])
   )
+(defrecord Ticket [price url])
+(defrecord Performer [name genre image_url])
+(defrecord Place [name city country location])
+(defrecord Event [name performer Place Ticket])
+(defrecord Flight [origin destination carrier departure_date arrival_date price url])
+(defrecord Result [Event Flight total_price total_distance])
 
 (defn load-airport-codes [] 
   
-  (def a (with-open [file (io/reader "IATAairCodes.csv")]
-           (csv/read-csv (slurp file) :separator \;)
+  (def a (with-open [file (io/reader "airports.csv")]
+           (csv/read-csv (slurp file) :separator \,)
            ))
   a  
   )
@@ -32,12 +38,33 @@
   (en/xml-resource "index.html") [request] 
   )
 
-(defn request-artist [artist]
-  ((let [response (client/get (str "http://api.viagogo.net/Public/Event/Search?searchText=" artist))]
-     ;; Handle responses one-by-one, blocking as necessary
-     ;; Other keys :headers :body :error :opts
-     (@response)
-     ))
+(defn request-events [artist]
+  (def events ((parse-string (:body (client/get (str "http://api.seatgeek.com/2/events?per_page=5&page=1&sort=lowest_price.asc&performers.slug=" artist)))) "events"))
+  (def eventsmap (atom{}))
+  (for [i (range 0 (count events))] 
+    (let [el (nth events i), performers (el "performers"), venue (el "venue")]
+      (def artists (atom []))
+      (for [j (range (count performers))] 
+        (let [per (nth performers j)]
+          (def a (swap! artists conj (->Performer (per "name") (((per "genres") 0) "name") (per "image")))))
+        )
+      (def ven (->Place ((el "venue") "name") ((el "venue") "city") ((el "venue") "country") (vals ((el "venue") "location"))))
+      (def tick (->Ticket ((el "stats") "lowest_price") (el "url") ))
+      (def event (->Event (el "title") a ven tick))
+      (swap! eventsmap assoc i event) 
+      )
+    )
+  )
+
+(defn get-events-map [map]
+  (
+    (def eventstmap (atom {}))
+    (for [i (range 0 (count list))] 
+      (let [elem (nth list i)]
+        (swap! aiportmap assoc (elem 3) (elem 1)) i)
+      )
+    (def mapair (zipmap (map keyword (keys @aiportmap)) (vals @aiportmap)))
+    )mapair
   )
 
 ;(defn request-flights [origin destination departure_date arrival_date])
