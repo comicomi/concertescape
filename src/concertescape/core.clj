@@ -7,65 +7,69 @@
   (require [cheshire.core :refer :all])
   (require [clojure.data.csv :as csv])
   (require [clojure.java.io :as io])
-   (import 'java.util.Date)
   )
+(import 'java.util.Date)
+(import 'java.text.SimpleDateFormat)
 (defrecord Ticket [price url])
 (defrecord Performer [name genre image_url])
 (defrecord Place [name city country location])
-(defrecord Event [name performer date Place Ticket])
+(defrecord Event [name performers date Place Ticket])
 (defrecord Flight [origin destination departure_date arrival_date carrier])
 (defrecord Trip [Flights price])
-(defrecord Result [Event Flight total_price total_distance])
+(defrecord Result [Event Trip total_price total_distance])
 
-(defn load-airport-codes [] 
-  
-  (def a (with-open [file (io/reader "IATAairCodes.csv")]
-           (csv/read-csv (slurp file) :separator \;,)
-           ))
-  a  
+(def airports (with-open [file (io/reader "IATAairCodes.csv")]
+                (csv/read-csv (slurp file) :separator \;,)
+                )
   )
 
-(defn get-airport-codes-map [list]
-  (
-    (def aiportmap (atom {}))
-    (for [i (range 0 (count list))] 
-      (let [elem (nth list i)]
-        (swap! aiportmap assoc (elem 3) [(elem 1) (elem 2)] ) i)
-      )aiportmap
-    ;   (def mapair (zipmap (map keyword (keys @aiportmap)) (vals @aiportmap)))
-    ;  )mapair
-    ))
+(def airport-codes-map 
+  (into {} (for [i (range 0 (count airports))] 
+             (let [elem (nth airports i), airport {  [(elem 1) (elem 2)] (elem 3)}]
+               airport
+               )
+             )
+        )
+  )
 
-(defn get-airport-code [place airportmap]
-  (def airportcode (airportmap (first (filter #(and (= (% 1) (-> place :country)) (.startsWith (% 0) (-> place :city))) (keys airportmap)))))
-  airportcode
+
+(defn get-airport-code [place]
+   (airport-codes-map (first (filter #(and (.startsWith (% 1) (-> place :country)) (.startsWith (% 0) (-> place :city))) (keys airport-codes-map))))
   )
 
 (en/deftemplate homepage
   (en/xml-resource "index.html") [request] 
   )
 
-(defn request-events [artist]
-  (def events ((parse-string (:body (client/get (str "http://api.seatgeek.com/2/events?per_page=5&page=1&sort=lowest_price.asc&performers.slug=" artist)))) "events"))
-  (def eventsmap (atom{}))
-  (for [i (range 0 (count events))] 
-    (let [el (nth events i), performers (el "performers"), venue (el "venue")]
-      (def artists (atom []))
-      (for [j (range (count performers))] 
-        (let [per (nth performers j)]
-          (def a (swap! artists conj (->Performer (per "name") (((per "genres") 0) "name") (per "image")))))
+(defn get-performers [performers]
+  (let [artists {}] 
+    (for [j (range 0 (count performers))] 
+      (let [per (nth performers j), performer (->Performer (per "name") (((per "genres") 0) "name") (per "image"))]
+        (conj artists performer)
         )
-      (def ven (->Place ((el "venue") "name") ((el "venue") "city") ((el "venue") "country") (vals ((el "venue") "location"))))
-      (def tick (->Ticket ((el "stats") "lowest_price") (el "url") ))
-      (def event (->Event (el "title") (subs (el "datetime_local") 0 (.indexOf (el "datetime_local") "T")) a ven tick))
-      (swap! eventsmap assoc i event) 
       )
     )
-  eventsmap
   )
 
+(defn request-events [artist]
+  (let [events ((parse-string (:body (client/get (str "http://api.seatgeek.com/2/events?per_page=5&page=1&sort=lowest_price.asc&performers.slug=" artist)))) "events")]
+    (for [i (range 0 (count events))] 
+      (let [el (nth events i), 
+            performers (el "performers"), 
+            venue (el "venue"), 
+            ven (->Place (venue "name") (venue "city") (venue "country") (vals (venue "location"))),
+            tick (->Ticket ((el "stats") "lowest_price") (el "url")),
+            artists (get-performers performers)] 
+        (->Event (el "title") artists (subs (el "datetime_local") 0 (.indexOf (el "datetime_local") "T")) ven tick)     
+        )
+      )
+    )
+  )
+
+
+
 (defn get-events-map [map]
-  (
+  ((def aiportmap (atom {}))
     (def eventstmap (atom {}))
     (for [i (range 0 (count list))] 
       (let [elem (nth list i)]
@@ -77,18 +81,18 @@
 
 ;(defn request-flights [origin destination departure_date arrival_date])
 ;(defn get-date [date choice] 
- ; (Date. (choice (.getTime (.parse (SimpleDateFormat. "yyyy-MM-dd") date)) (* 1000 60 60 24)))
-  ;)
+; (Date. (choice (.getTime (.parse (SimpleDateFormat. "yyyy-MM-dd") date)) (* 1000 60 60 24)))
+;)
 
-(defn parse-date [date]
-   (Date. (.getTime (.parse (SimpleDateFormat. "yyyy-MM-dd") date)))
+(defn parse-date [pattern date]
+  (Date. (.getTime (.parse (SimpleDateFormat. pattern) date)))
   )
 (defn get-date [choice date]
   (Date.(choice (.getTime date)  (* 1000 60 60 24) ))
   )
 
-(defn format-date [date]
-  (.format (SimpleDateFormat. "yyyy-MM-dd") date)
+(defn format-date [pattern date] ;"yyyy-MM-dd 'at' hh:mm"
+  (.format (SimpleDateFormat. pattern) date)
   )
 
 (defn send-flight-request [origin_code destination_code departure_date arrival_date]
@@ -149,22 +153,35 @@
           (let [carrier (nth fare_carriers i), connection (first (:leg (nth connections j)))]
             (if (or (= (:origin carrier) (:origin connection)) (= (:destination carrier) (:destination connection))) 
               (let [car (carriermap (:carrier carrier))] 
-                (->Flight (citymap (:origin connection)) (citymap (:destination connection)) (format-date (:departureTime connection)) (format-date (:arrivalTime connection)) car)
+                (->Flight (citymap (:origin connection)) (citymap (:destination connection)) (format-date (parse-date "yyyy-MM-dd'T'hh:mm" (:departureTime connection))) (format-date (parse-date "yyyy-MM-dd'T'hh:mm" (:arrivalTime connection))) car)
                 ))
             )
           ) 
         ))
     ))
 
+(defn top-level-fun [artist location]
+  (let [response (request-events "avicii"), 
+        places (map :Place response), 
+        dates (map :date response),
+        destinations (map get-airport-code places),
+        departure_dates  (map format-date (repeat 5 "yyyy-MM-dd") (map get-date (repeat 5 -)(map parse-date (repeat 5 "yyyy-MM-dd") dates))),
+        arrival_dates  (map format-date (repeat 5 "yyyy-MM-dd") (map get-date (repeat 5 +)(map parse-date (repeat 5 "yyyy-MM-dd") dates)))]
+    (map send-flight-request (repeat 5 "BEG") destinations departure_dates arrival_dates)
+    )
+  )
+
 (defroutes app*
   (compojure.route/resources "/")
   (GET "/" request (homepage request))
   (POST "/event-airline-tickets" request
-        (request-artist (-> request :params :artist))
+        (top-level-fun (:artist (:params request)) (:location (:params request)))
         )
   )
 
 (def app (compojure.handler/site app*))
 
-(defn -main [& args] "connects to server"
-  (httpserver/run-server #'app {:port 8080 :ip "localhost" :join? false}))
+(defn -main []
+  (httpserver/run-server #'app {:port 8080 :ip "localhost" :join? false})
+  ; (println "dadad")
+  )
