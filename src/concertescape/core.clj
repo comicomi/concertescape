@@ -18,27 +18,44 @@
 (defrecord Trip [Flights price])
 (defrecord Result [Event Trip total_price total_distance])
 
-(def airports (with-open [file (io/reader "IATAairCodes.csv")]
-                (csv/read-csv (slurp file) :separator \;,)
+(defn load-csv [file delimiter]
+  (with-open [file (io/reader file)]
+                (csv/read-csv (slurp file) :separator delimiter ,)
                 )
   )
 
+(def airports (load-csv "IATAairCodes.csv" \;))
+
+(def locations (load-csv "airports.csv" \, ))
+
 (def airport-codes-map 
-  (into {} (for [i (range 0 (count airports))] 
-             (let [elem (nth airports i), airport {  [(elem 1) (elem 2)] (elem 3)}]
-               airport
-               )
-             )
+  (into (sorted-map) (for [i (range 0 (count airports))] 
+                 (let [elem (nth airports i), airport {  [(elem 1) (elem 2)] (elem 3)}]
+                   airport
+                   )
+                 )
         )
   )
 
+(def location-codes-map 
+     (into (sorted-map) (for [i (range 0 (count locations))] 
+                (let [elem (nth locations i), location { (elem 4) (list (elem 6) (elem 7))}]
+                  location
+                  )
+                )
+           )
+     )
 
 (defn get-airport-code [place]
-   (airport-codes-map (first (filter #(and (.startsWith (% 1) (-> place :country)) (.startsWith (% 0) (-> place :city))) (keys airport-codes-map))))
+  (airport-codes-map (first (filter #(and (.startsWith (% 1) (-> place :country)) (.startsWith (% 0) (-> place :city))) (keys airport-codes-map))))
   )
 
 (en/deftemplate homepage
   (en/xml-resource "index.html") [request] 
+  [:#combobox :option] (en/clone-for [[airport] airport-codes-map]
+                                (comp (en/content (format "%s , %s"  (airport 0) (airport 1)))
+                                 (en/set-attr :value  (airport-codes-map airport )))
+                                 )  
   )
 
 (defn get-performers [performers]
@@ -128,12 +145,12 @@
                 :accept :json
                 :throw-entire-message? true}
     )   
-  (def response (client/post "https://www.googleapis.com/qpxExpress/v1/trips/search?key=AIzaSyDYM93xp8iYFCxfTdvfk2z3BpLBfXqDxB0&fields=trips/data(city(code,name),carrier(code,name),airport(code,city)),trips/tripOption(saleTotal,slice/segment/leg(origin,destination,arrivalTime,departureTime),pricing/fare(origin,destination,carrier))"
-                             options))
-  
-  
-  (def body (parse-string (:body response) true))
-  
+  (let [response (client/post "https://www.googleapis.com/qpxExpress/v1/trips/search?key=AIzaSyDYM93xp8iYFCxfTdvfk2z3BpLBfXqDxB0&fields=trips/data(city(code,name),carrier(code,name),airport(code,city)),trips/tripOption(saleTotal,slice/segment/leg(origin,destination,arrivalTime,departureTime),pricing/fare(origin,destination,carrier))"
+                              options)]
+    
+    
+    (parse-string (:body response) true)
+    )
   
   )
 
@@ -161,7 +178,8 @@
     ))
 
 (defn top-level-fun [artist location]
-  (let [response (request-events "avicii"), 
+  (let [origin (airport-codes-map location),
+        response (request-events "avicii"), 
         places (map :Place response), 
         dates (map :date response),
         destinations (map get-airport-code places),
@@ -175,7 +193,7 @@
   (compojure.route/resources "/")
   (GET "/" request (homepage request))
   (POST "/event-airline-tickets" request
-        (top-level-fun (:artist (:params request)) (:location (:params request)))
+          (top-level-fun (:artist (:params request)) (:location (:params request)))
         )
   )
 
