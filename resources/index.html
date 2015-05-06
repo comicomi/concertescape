@@ -97,7 +97,7 @@
         response( this.element.children( "option" ).map(function() {
           var text = $( this ).text();
           var b = (this.value && (!request.term || matcher.test(text)));
-        	alert(b);
+        //	alert(b);
         	if (this.value && (!request.term || matcher.test(text)))
             return {
               label: text,

@@ -50,6 +50,7 @@
   (airport-codes-map (first (filter #(and (.startsWith (% 1) (-> place :country)) (.startsWith (% 0) (-> place :city))) (keys airport-codes-map))))
   )
 
+
 (en/deftemplate homepage
   (en/xml-resource "index.html") [request] 
   [:#combobox :option] (en/clone-for [[airport] airport-codes-map]
@@ -158,19 +159,22 @@
   (let [tripOption  (first (:tripOption (:trips body))), 
         price (:saleTotal tripOption), 
         fare_carriers  (:fare (first (:pricing tripOption))),
-        fares (:slice tripOption)
+        fares (:slice tripOption),
         data (:data (:trips body)),
         carriers (:carrier data),
-        citymap (zipmap (map :code (:airport data)) (map :name (:city data)))
+        citymap (zipmap (map (fn [city] (:code (first (filter #(= city (:city % 1))  (:airport data))))) (map :code (:city data))) (map :name (:city data)))
         carriermap (zipmap (map :code carriers) (map :name carriers))
         ] 
     (for [i (range 0 (count fares))] 
       (let [connections (:segment (nth fares i))]
         (for [j (range 0 (count connections))] 
-          (let [carrier (nth fare_carriers i), connection (first (:leg (nth connections j)))]
-            (if (or (= (:origin carrier) (:origin connection)) (= (:destination carrier) (:destination connection))) 
+          (let [carrier (nth fare_carriers i), 
+                connection (first (:leg (nth connections j)))
+                first_connection (first (:leg (first connections)))
+                last_connection (first (:leg (last connections)))]
+            (if (or (= (:origin carrier) (:origin first_connection)) (= (:destination carrier) (:destination last_connection))) 
               (let [car (carriermap (:carrier carrier))] 
-                (->Flight (citymap (:origin connection)) (citymap (:destination connection)) (format-date (parse-date "yyyy-MM-dd'T'hh:mm" (:departureTime connection))) (format-date (parse-date "yyyy-MM-dd'T'hh:mm" (:arrivalTime connection))) car)
+                (->Flight (citymap (:origin connection)) (citymap (:destination connection)) (format-date "yyyy-MM-dd 'at' hh:mm" (parse-date "yyyy-MM-dd'T'hh:mm" (:departureTime connection))) (format-date "yyyy-MM-dd 'at' hh:mm" (parse-date "yyyy-MM-dd'T'hh:mm" (:arrivalTime connection))) car)
                 ))
             )
           ) 
@@ -178,14 +182,14 @@
     ))
 
 (defn top-level-fun [artist location]
-  (let [origin (airport-codes-map location),
-        response (request-events "avicii"), 
+  (let [response (request-events "avicii"), 
         places (map :Place response), 
         dates (map :date response),
         destinations (map get-airport-code places),
         departure_dates  (map format-date (repeat 5 "yyyy-MM-dd") (map get-date (repeat 5 -)(map parse-date (repeat 5 "yyyy-MM-dd") dates))),
         arrival_dates  (map format-date (repeat 5 "yyyy-MM-dd") (map get-date (repeat 5 +)(map parse-date (repeat 5 "yyyy-MM-dd") dates)))]
-    (map send-flight-request (repeat 5 "BEG") destinations departure_dates arrival_dates)
+    (def a (map process-flight-response (map send-flight-request (repeat 5 location) destinations departure_dates arrival_dates)))
+    a
     )
   )
 
