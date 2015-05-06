@@ -20,8 +20,8 @@
 
 (defn load-csv [file delimiter]
   (with-open [file (io/reader file)]
-                (csv/read-csv (slurp file) :separator delimiter ,)
-                )
+    (csv/read-csv (slurp file) :separator delimiter ,)
+    )
   )
 
 (def airports (load-csv "IATAairCodes.csv" \;))
@@ -30,21 +30,48 @@
 
 (def airport-codes-map 
   (into (sorted-map) (for [i (range 0 (count airports))] 
-                 (let [elem (nth airports i), airport {  [(elem 1) (elem 2)] (elem 3)}]
-                   airport
-                   )
-                 )
+                       (let [elem (nth airports i), airport {  [(elem 1) (elem 2)] (elem 3)}]
+                         airport
+                         )
+                       )
         )
   )
 
 (def location-codes-map 
-     (into (sorted-map) (for [i (range 0 (count locations))] 
-                (let [elem (nth locations i), location { (elem 4) (list (elem 6) (elem 7))}]
-                  location
+  (into (sorted-map) (for [i (range 0 (count locations))] 
+                       (let [elem (nth locations i), location { (elem 4) (list (elem 6) (elem 7))}]
+                         location
+                         )
+                       )
+        )
+  )
+
+(defn calculate-distance [a b]
+  (defn deg-to-rad [x]
+    (* (/ java.lang.Math/PI 180) x)
+    )
+  (let [dlon (- (deg-to-rad(last a)) (deg-to-rad(last b))),
+        dlat (- (deg-to-rad(first a)) (deg-to-rad(first b)))
+        res (+ 
+              (java.lang.Math/pow 
+                (java.lang.Math/sin 
+                  (/ dlat 2)
+                  ) 2
+                ) 
+              (* 
+                (java.lang.Math/cos (deg-to-rad(first a))) 
+                (* 
+                  (java.lang.Math/cos (deg-to-rad(first b))) 
+                  (java.lang.Math/pow 
+                    (java.lang.Math/sin 
+                      (/ dlon 2)
+                      ) 2)
                   )
                 )
-           )
-     )
+              )]
+    (* (* (java.lang.Math/atan2 (java.lang.Math/sqrt res) (java.lang.Math/sqrt (- 1 res))) 2) 6373)
+    )
+  )
 
 (defn get-airport-code [place]
   (airport-codes-map (first (filter #(and (.startsWith (% 1) (-> place :country)) (.startsWith (% 0) (-> place :city))) (keys airport-codes-map))))
@@ -54,9 +81,9 @@
 (en/deftemplate homepage
   (en/xml-resource "index.html") [request] 
   [:#combobox :option] (en/clone-for [[airport] airport-codes-map]
-                                (comp (en/content (format "%s , %s"  (airport 0) (airport 1)))
-                                 (en/set-attr :value  (airport-codes-map airport )))
-                                 )  
+                                     (comp (en/content (format "%s , %s"  (airport 0) (airport 1)))
+                                           (en/set-attr :value  (airport-codes-map airport )))
+                                     )  
   )
 
 (defn get-performers [performers]
@@ -164,21 +191,23 @@
         carriers (:carrier data),
         citymap (zipmap (map (fn [city] (:code (first (filter #(= city (:city % 1))  (:airport data))))) (map :code (:city data))) (map :name (:city data)))
         carriermap (zipmap (map :code carriers) (map :name carriers))
-        ] 
-    (for [i (range 0 (count fares))] 
-      (let [connections (:segment (nth fares i))]
-        (for [j (range 0 (count connections))] 
-          (let [carrier (nth fare_carriers i), 
-                connection (first (:leg (nth connections j)))
-                first_connection (first (:leg (first connections)))
-                last_connection (first (:leg (last connections)))]
-            (if (or (= (:origin carrier) (:origin first_connection)) (= (:destination carrier) (:destination last_connection))) 
-              (let [car (carriermap (:carrier carrier))] 
-                (->Flight (citymap (:origin connection)) (citymap (:destination connection)) (format-date "yyyy-MM-dd 'at' hh:mm" (parse-date "yyyy-MM-dd'T'hh:mm" (:departureTime connection))) (format-date "yyyy-MM-dd 'at' hh:mm" (parse-date "yyyy-MM-dd'T'hh:mm" (:arrivalTime connection))) car)
-                ))
-            )
-          ) 
-        ))
+        mapa (atom {:price price})] 
+    (swap! mapa conj {:flight 
+                      (for [i (range 0 (count fares))] 
+                        (let [connections (:segment (nth fares i))]
+                          (for [j (range 0 (count connections))] 
+                            (let [carrier (nth fare_carriers i), 
+                                  connection (first (:leg (nth connections j)))
+                                  first_connection (first (:leg (first connections)))
+                                  last_connection (first (:leg (last connections)))]
+                              (if (or (= (:origin carrier) (:origin first_connection)) (= (:destination carrier) (:destination last_connection))) 
+                                (let [car (carriermap (:carrier carrier))] 
+                                  (->Flight (citymap (:origin connection)) (citymap (:destination connection)) (format-date "yyyy-MM-dd 'at' hh:mm" (parse-date "yyyy-MM-dd'T'hh:mm" (:departureTime connection))) (format-date "yyyy-MM-dd 'at' hh:mm" (parse-date "yyyy-MM-dd'T'hh:mm" (:arrivalTime connection))) car)
+                                  ))
+                              )
+                            ) 
+                          ))
+                      })                  
     ))
 
 (defn top-level-fun [artist location]
@@ -197,7 +226,7 @@
   (compojure.route/resources "/")
   (GET "/" request (homepage request))
   (POST "/event-airline-tickets" request
-          (top-level-fun (:artist (:params request)) (:location (:params request)))
+        (top-level-fun (:artist (:params request)) (:location (:params request)))
         )
   )
 
