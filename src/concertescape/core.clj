@@ -50,6 +50,7 @@
   (defn deg-to-rad [x]
     (* (/ java.lang.Math/PI 180) x)
     )
+  (def EARTH_RADIUS (atom  6373))
   (let [dlon (- (deg-to-rad(last a)) (deg-to-rad(last b))),
         dlat (- (deg-to-rad(first a)) (deg-to-rad(first b)))
         res (+ 
@@ -69,7 +70,7 @@
                   )
                 )
               )]
-    (* (* (java.lang.Math/atan2 (java.lang.Math/sqrt res) (java.lang.Math/sqrt (- 1 res))) 2) 6373)
+    (* (* (java.lang.Math/atan2 (java.lang.Math/sqrt res) (java.lang.Math/sqrt (- 1 res))) 2) EARTH_RADIUS)
     )
   )
 
@@ -164,6 +165,7 @@
                                                               },
                                                  :solutions 1,
                                                  :refundable false
+                                                 :saleCountry "DE"
                                                  }}))
   (def options {
                 :body  requestFlight
@@ -184,7 +186,7 @@
 
 (defn process-flight-response [body]
   (let [tripOption  (first (:tripOption (:trips body))), 
-        price (:saleTotal tripOption), 
+        price (subs (:saleTotal tripOption) 3), 
         fare_carriers  (:fare (first (:pricing tripOption))),
         fares (:slice tripOption),
         data (:data (:trips body)),
@@ -211,14 +213,20 @@
     ))
 
 (defn top-level-fun [artist location]
-  (let [response (request-events "avicii"), 
-        places (map :Place response), 
-        dates (map :date response),
+  (let [events (request-events "avicii"), 
+        places (map :Place events), 
+        dates (map :date events),
         destinations (map get-airport-code places),
         departure_dates  (map format-date (repeat 5 "yyyy-MM-dd") (map get-date (repeat 5 -)(map parse-date (repeat 5 "yyyy-MM-dd") dates))),
-        arrival_dates  (map format-date (repeat 5 "yyyy-MM-dd") (map get-date (repeat 5 +)(map parse-date (repeat 5 "yyyy-MM-dd") dates)))]
-    (def a (map process-flight-response (map send-flight-request (repeat 5 location) destinations departure_dates arrival_dates)))
-    a
+        arrival_dates  (map format-date (repeat 5 "yyyy-MM-dd") (map get-date (repeat 5 +)(map parse-date (repeat 5 "yyyy-MM-dd") dates))),
+        flights (map process-flight-response (map send-flight-request (repeat 5 location) destinations departure_dates arrival_dates))]
+    (def a (map list events flights))
+    (for [i (range (count a))]
+      (let [result (nth a i), event (nth result 0), trip (nth result 1), rez (merge {:event event} trip)]
+        (merge {:total_price (+ (java.lang.Double/parseDouble (subs (rez :price) 3)) (-> (-> (rez :event) :Ticket) :price))} rez)
+        )
+      )
+    
     )
   )
 
