@@ -38,13 +38,15 @@
   )
 
 (def location-codes-map 
-  (into (sorted-map) (for [i (range 0 (count locations))] 
-                       (let [elem (nth locations i), location { (elem 4) (list (elem 6) (elem 7))}]
-                         location
-                         )
-                       )
-        )
+  (let [location-map (into (sorted-map) (for [i (range 0 (count locations))] 
+                                          (let [elem (nth locations i), location { (elem 4) (list (elem 6) (elem 7))}]
+                                            location
+                                            )
+                                          )
+                           )]
+    (zipmap (keys location-map) (map (fn [x] (map (fn [y] (java.lang.Double/parseDouble y)) x)) (vals location-map))))
   )
+
 
 (defn calculate-distance [a b]
   (defn deg-to-rad [x]
@@ -70,7 +72,7 @@
                   )
                 )
               )]
-    (* (* (java.lang.Math/atan2 (java.lang.Math/sqrt res) (java.lang.Math/sqrt (- 1 res))) 2) EARTH_RADIUS)
+    (* (* (java.lang.Math/atan2 (java.lang.Math/sqrt res) (java.lang.Math/sqrt (- 1 res))) 2) @EARTH_RADIUS)
     )
   )
 
@@ -78,13 +80,48 @@
   (airport-codes-map (first (filter #(and (.startsWith (% 1) (-> place :country)) (.startsWith (% 0) (-> place :city))) (keys airport-codes-map))))
   )
 
+;(def results (atom (list {:event (->Event "Avicii" (list (->Performer "fdf" "dsds" "http://data2.whicdn.com/images/96950352/thumb.jpg") (->Performer "fdf" "dsds" "http://i.ytimg.com/vi/0WV00zrWoXk/default.jpg")) "ee" (->Place "a" "b" "c" "l") (->Ticket "p" "s")) :flight (list
+ ;                                                                                                                                                                                                                                                                                (list (->Flight "BEG" "LCA" "12" "12" "12"))
+  ;                                                                                                                                                                                                                                                                               (list (->Flight "BEG" "LCA" "12" "12" "12"))) :price "eweq" :total_price 4123 :total_distance "dada"}
+   ;                      {:event (->Event "Avicii" (list (->Performer "fdf" "dsds" "http://data2.whicdn.com/images/96950352/thumb.jpg")) "ee" (->Place "a" "b" "c" "l") (->Ticket "p" "s")) :flight (list
+   ;                                                                                                                                                                                                  (list (->Flight "BEG" "LCA" "12" "12" "12"))
+    ;                                                                                                                                                                                                  (list (->Flight "BEG" "LCA" "12" "12" "12"))) :price "eweqa" :total_price 1233 :total_distance "dadad"} ) ))
 
-(en/deftemplate homepage
+(def results (atom {}))    
+    
+ (en/deftemplate homepage
   (en/xml-resource "index.html") [request] 
-  [:#combobox :option] (en/clone-for [[airport] airport-codes-map]
+   [:#combobox :option] (en/clone-for [[airport] airport-codes-map]
                                      (comp (en/content (format "%s , %s"  (airport 0) (airport 1)))
-                                           (en/set-attr :value  (airport-codes-map airport )))
-                                     )  
+                                            (en/set-attr :value  (airport-codes-map airport )))
+                                      )
+   [:#results :div.escape]  (en/clone-for [result @results]
+                                          [:div.event :.name] 
+                                          (en/content (:name (result :event)))
+                                         
+                                          [:table.artists :tr :td] (en/clone-for  [artist (:performers (result :event))]
+                                                                  [:img] (en/set-attr :src (:image_url artist))
+                                                                         [:p] (en/content (str (:name artist) " (" (:genre artist) ")" ))
+                                                                  )
+                                          ;      [:img] (en/set-attr :src (: (result :event)))
+                                          [:div.event :.place] (en/content 
+                                                                 (let [place   (:Place (result :event))]
+                                                                   (str (:name place) " - " (:city place) ", " (:country place))
+                                                                   )
+                                                                 )
+                                          [:div.event :.ticket] (en/prepend
+                                                                             (str  (:price (:Ticket (result :event))) "€"))
+                                         [:a] (comp 
+                                              (en/append (str " Buy now " ))
+                                              (en/set-attr :href (:url (:Ticket (result :event))))
+                                              )
+                                                                           
+                                         
+                                          )
+   ;   [:div.trip] (en/content (result :flight))
+   ;    [:h3.distance] (en/content (result :total_distance))
+   ;   [:h2.price] (en/content (result :total_price) )
+   
   )
 
 (defn get-performers [performers]
@@ -186,7 +223,7 @@
 
 (defn process-flight-response [body]
   (let [tripOption  (first (:tripOption (:trips body))), 
-        price (subs (:saleTotal tripOption) 3), 
+        price (java.lang.Double/parseDouble (subs (:saleTotal tripOption) 3)), 
         fare_carriers  (:fare (first (:pricing tripOption))),
         fares (:slice tripOption),
         data (:data (:trips body)),
@@ -213,17 +250,25 @@
     ))
 
 (defn top-level-fun [artist location]
-  (let [events (request-events "avicii"), 
+  (let [events (request-events artist), 
         places (map :Place events), 
         dates (map :date events),
         destinations (map get-airport-code places),
         departure_dates  (map format-date (repeat 5 "yyyy-MM-dd") (map get-date (repeat 5 -)(map parse-date (repeat 5 "yyyy-MM-dd") dates))),
         arrival_dates  (map format-date (repeat 5 "yyyy-MM-dd") (map get-date (repeat 5 +)(map parse-date (repeat 5 "yyyy-MM-dd") dates))),
-        flights (map process-flight-response (map send-flight-request (repeat 5 location) destinations departure_dates arrival_dates))]
-    (def a (map list events flights))
-    (for [i (range (count a))]
-      (let [result (nth a i), event (nth result 0), trip (nth result 1), rez (merge {:event event} trip)]
-        (merge {:total_price (+ (java.lang.Double/parseDouble (subs (rez :price) 3)) (-> (-> (rez :event) :Ticket) :price))} rez)
+        flights (map process-flight-response (map send-flight-request (repeat 5 location) destinations departure_dates arrival_dates)),
+        locations (map location-codes-map destinations),
+        distances (map #(calculate-distance (location-codes-map location)  %) locations),
+        results (map list events flights)]
+    (for [i (range (count results))]
+      (let [result (nth results i), 
+            event (nth result 0), 
+            trip (nth result 1), 
+            distance (nth distances i),
+            inter_res (merge {:event event} trip {:total_distance distance} ), 
+            total_price (+  (inter_res :price) (-> (-> (inter_res :event) :Ticket) :price)),
+            total_score  (reduce + (map #(* 0.5 %) (list distance total_price)))]
+        (merge {:total_price total_price} inter_res {:total_score total_score})
         )
       )
     
@@ -234,7 +279,9 @@
   (compojure.route/resources "/")
   (GET "/" request (homepage request))
   (POST "/event-airline-tickets" request
-        (top-level-fun (:artist (:params request)) (:location (:params request)))
+      (reset! results (sort-by #(% :total_score) (top-level-fun (:artist (:params request)) (:location (:params request)))))
+        
+              
         )
   )
 
