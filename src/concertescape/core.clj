@@ -80,14 +80,14 @@
   (airport-codes-map (first (filter #(and (.startsWith (% 1) (-> place :country)) (.startsWith (% 0) (-> place :city))) (keys airport-codes-map))))
   )
 
-;(def results (atom (list {:event (->Event "Avicii" (list (->Performer "fdf" "dsds" "http://data2.whicdn.com/images/96950352/thumb.jpg") (->Performer "fdf" "dsds" "http://i.ytimg.com/vi/0WV00zrWoXk/default.jpg")) "ee" (->Place "a" "b" "c" "l") (->Ticket "p" "s")) :flight (list
- ;                                                                                                                                                                                                                                                                                (list (->Flight "BEG" "LCA" "12" "12" "12"))
-  ;                                                                                                                                                                                                                                                                               (list (->Flight "BEG" "LCA" "12" "12" "12"))) :price "eweq" :total_price 4123 :total_distance "dada"}
-   ;                      {:event (->Event "Avicii" (list (->Performer "fdf" "dsds" "http://data2.whicdn.com/images/96950352/thumb.jpg")) "ee" (->Place "a" "b" "c" "l") (->Ticket "p" "s")) :flight (list
-   ;                                                                                                                                                                                                  (list (->Flight "BEG" "LCA" "12" "12" "12"))
-    ;                                                                                                                                                                                                  (list (->Flight "BEG" "LCA" "12" "12" "12"))) :price "eweqa" :total_price 1233 :total_distance "dadad"} ) ))
+(def results (atom (list {:event (->Event "Avicii" (list (->Performer "fdf" "dsds" "http://data2.whicdn.com/images/96950352/thumb.jpg") (->Performer "fdf" "dsds" "http://i.ytimg.com/vi/0WV00zrWoXk/default.jpg")) "ee" (->Place "a" "b" "c" "l") (->Ticket "p" "s")) :flight (list
+                                                                                                                                                                                                                                                                                (list (->Flight "BEG" "LCA" "12" "12" "12"))
+                                                                                                                                                                                                                                                                               (list (->Flight "LCA" "BEG" "12" "12" "12"))) :price "eweq" :total_price 4123 :total_distance "dada"}
+                      {:event (->Event "Avicii" (list (->Performer "fdf" "dsds" "http://data2.whicdn.com/images/96950352/thumb.jpg")) "ee" (->Place "a" "b" "c" "l") (->Ticket "p" "s")) :flight (list
+                                                                                                                                                                                                  (list (->Flight "BEG" "LCA" "12" "12" "12"))
+                                                                                                                                                                                                  (list (->Flight "LCA" "BEG" "12" "12" "12"))) :price "eweqa" :total_price 1233 :total_distance "dadad"} ) ))
 
-(def results (atom {}))    
+;(def results (atom {}))    
     
  (en/deftemplate homepage
   (en/xml-resource "index.html") [request] 
@@ -116,7 +116,22 @@
                                               (en/set-attr :href (:url (:Ticket (result :event))))
                                               )
                                                                            
-                                         
+                                         [:div.trip :table.departure :tbody :tr] (en/clone-for [connection  (first (result :flight))]
+                                                                         [:.origin] (en/content (:origin connection) )
+                                                                         [:.destination]  (en/content  (:destination connection) )
+                                                                         [:.departure_date]  (en/content  (:departure_date connection))
+                                                                         [:.arrival_date]  (en/content  (:arrival_date connection))
+                                                                         [:.carrier]  (en/content  (:carrier connection) )
+                                                                              )
+                                         [:div.trip :table.arrival :tbody :tr] (en/clone-for [connection  (last (result :flight))]
+                                                                         [:.origin] (en/content (:origin connection) )
+                                                                         [:.destination]  (en/content  (:destination connection) )
+                                                                         [:.departure_date]  (en/content  (:departure_date connection))
+                                                                         [:.arrival_date]  (en/content  (:arrival_date connection))
+                                                                         [:.carrier]  (en/content  (:carrier connection) )
+                                                                              )
+                                         [:h3.distance] (en/content (str (result :total_distance)))
+                                         [:h2.price] (en/content (str (result :total_price)))
                                           )
    ;   [:div.trip] (en/content (result :flight))
    ;    [:h3.distance] (en/content (result :total_distance))
