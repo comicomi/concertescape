@@ -11,7 +11,7 @@
 (import 'java.util.Date)
 (import 'java.text.SimpleDateFormat)
 (defrecord Ticket [price url])
-(defrecord Performer [name genre image_url])
+(defrecord Performer [name image_url])
 (defrecord Place [name city country location])
 (defrecord Event [name performers date Place Ticket])
 (defrecord Flight [origin destination departure_date arrival_date carrier])
@@ -80,15 +80,16 @@
   (airport-codes-map (first (filter #(and (.startsWith (% 1) (-> place :country)) (.startsWith (% 0) (-> place :city))) (keys airport-codes-map))))
   )
 
-(def results (atom (list {:event (->Event "Avicii" (list (->Performer "fdf" "dsds" "http://data2.whicdn.com/images/96950352/thumb.jpg") (->Performer "fdf" "dsds" "http://i.ytimg.com/vi/0WV00zrWoXk/default.jpg")) "ee" (->Place "a" "b" "c" "l") (->Ticket "p" "s")) :flight (list
-                                                                                                                                                                                                                                                                                (list (->Flight "BEG" "LCA" "12" "12" "12"))
-                                                                                                                                                                                                                                                                               (list (->Flight "LCA" "BEG" "12" "12" "12"))) :price "eweq" :total_price 4123 :total_distance "dada"}
-                      {:event (->Event "Avicii" (list (->Performer "fdf" "dsds" "http://data2.whicdn.com/images/96950352/thumb.jpg")) "ee" (->Place "a" "b" "c" "l") (->Ticket "p" "s")) :flight (list
-                                                                                                                                                                                                  (list (->Flight "BEG" "LCA" "12" "12" "12"))
-                                                                                                                                                                                                  (list (->Flight "LCA" "BEG" "12" "12" "12"))) :price "eweqa" :total_price 1233 :total_distance "dadad"} ) ))
-
-;(def results (atom {}))    
+;(def results (atom (list {:event (->Event "Avicii" (list (->Performer "fdf" "dsds" "http://data2.whicdn.com/images/96950352/thumb.jpg") (->Performer "fdf" "dsds" "http://i.ytimg.com/vi/0WV00zrWoXk/default.jpg")) "ee" (->Place "a" "b" "c" "l") (->Ticket "p" "s")) :flight (list
+ ;                                                                                                                                                                                                                                                                              (list (->Flight "BEG" "LCA" "12" "12" "12"))
+  ;                                                                                                                                                                                                                                                                            (list (->Flight "LCA" "BEG" "12" "12" "12"))) :price "eweq" :total_price 4123 :total_distance 12321.12312}
+   ;                  {:event (->Event "Avicii" (list (->Performer "fdf" "dsds" "http://data2.whicdn.com/images/96950352/thumb.jpg")) "ee" (->Place "a" "b" "c" "l") (->Ticket "p" "s")) :flight (list
+    ;                                                                                                                                                                                              (list (->Flight "BEG" "LCA" "12" "12" "12"))
+     ;                                                                                                                                                                                             (list (->Flight "LCA" "BEG" "12" "12" "12"))) :price "eweqa" :total_price 1233 :total_distance 123.212} ) ))
+;
+(def results (atom {}))    
     
+
  (en/deftemplate homepage
   (en/xml-resource "index.html") [request] 
    [:#combobox :option] (en/clone-for [[airport] airport-codes-map]
@@ -97,20 +98,17 @@
                                       )
    [:#results :div.escape]  (en/clone-for [result @results]
                                           [:div.event :.name] 
-                                          (en/content (:name (result :event)))
+                                          (en/prepend   (str (:name (result :event)) " - " (:price (:Ticket (result :event))) "€ - " ))
                                          
                                           [:table.artists :tr :td] (en/clone-for  [artist (:performers (result :event))]
                                                                   [:img] (en/set-attr :src (:image_url artist))
-                                                                         [:p] (en/content (str (:name artist) " (" (:genre artist) ")" ))
+                                                                         [:p] (en/content (str (:name artist) ))
                                                                   )
-                                          ;      [:img] (en/set-attr :src (: (result :event)))
                                           [:div.event :.place] (en/content 
                                                                  (let [place   (:Place (result :event))]
                                                                    (str (:name place) " - " (:city place) ", " (:country place))
                                                                    )
                                                                  )
-                                          [:div.event :.ticket] (en/prepend
-                                                                             (str  (:price (:Ticket (result :event))) "€"))
                                          [:a] (comp 
                                               (en/append (str " Buy now " ))
                                               (en/set-attr :href (:url (:Ticket (result :event))))
@@ -130,19 +128,16 @@
                                                                          [:.arrival_date]  (en/content  (:arrival_date connection))
                                                                          [:.carrier]  (en/content  (:carrier connection) )
                                                                               )
-                                         [:h3.distance] (en/content (str (result :total_distance)))
-                                         [:h2.price] (en/content (str (result :total_price)))
+                                          [:div.trip :table.arrival :tbody :tfoot :td :.price] (en/content (str (result :price) "€") )
+                                         [:h4.distance] (en/content (str "Aproximate distance: "(java.lang.Math/round (result :total_distance)) "km"))
+                                         [:h3.price] (en/content (str "Total price (ticket+flight) per person: " (result :total_price) "€"))
                                           )
-   ;   [:div.trip] (en/content (result :flight))
-   ;    [:h3.distance] (en/content (result :total_distance))
-   ;   [:h2.price] (en/content (result :total_price) )
-   
-  )
+ )
 
 (defn get-performers [performers]
   (let [artists {}] 
     (for [j (range 0 (count performers))] 
-      (let [per (nth performers j), performer (->Performer (per "name") (((per "genres") 0) "name") (per "image"))]
+      (let [per (nth performers j), performer (->Performer (per "name") (per "image"))]
         (conj artists performer)
         )
       )
@@ -272,11 +267,11 @@
         departure_dates  (map format-date (repeat 5 "yyyy-MM-dd") (map get-date (repeat 5 -)(map parse-date (repeat 5 "yyyy-MM-dd") dates))),
         arrival_dates  (map format-date (repeat 5 "yyyy-MM-dd") (map get-date (repeat 5 +)(map parse-date (repeat 5 "yyyy-MM-dd") dates))),
         flights (map process-flight-response (map send-flight-request (repeat 5 location) destinations departure_dates arrival_dates)),
-        locations (map location-codes-map destinations),
-        distances (map #(calculate-distance (location-codes-map location)  %) locations),
-        results (map list events flights)]
-    (for [i (range (count results))]
-      (let [result (nth results i), 
+        dest_locations (map location-codes-map destinations),
+        distances (map #(calculate-distance (location-codes-map location)  %) dest_locations),
+        final_results (map list events flights)]
+    (for [i (range (count final_results))]
+      (let [result (nth final_results i), 
             event (nth result 0), 
             trip (nth result 1), 
             distance (nth distances i),
@@ -294,15 +289,15 @@
   (compojure.route/resources "/")
   (GET "/" request (homepage request))
   (POST "/event-airline-tickets" request
-      (reset! results (sort-by #(% :total_score) (top-level-fun (:artist (:params request)) (:location (:params request)))))
-        
-              
-        )
+      (let [artist  (:artist (:params request)), location  (:location (:params request))]
+       ; (reset! results (top-level-fun  artist location))
+        (reset! results (sort-by #(% :total_score) (top-level-fun  artist location)))
+     )
+     )
   )
 
 (def app (compojure.handler/site app*))
 
 (defn -main []
   (httpserver/run-server #'app {:port 8080 :ip "localhost" :join? false})
-  ; (println "dadad")
   )

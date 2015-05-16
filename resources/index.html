@@ -1,9 +1,10 @@
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8"></meta>
-<link rel="stylesheet" type="text/css" href="style.css" />
 <link rel="stylesheet"
 	href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+	
+<link rel="stylesheet" type="text/css" href="style.css" />
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
@@ -101,19 +102,13 @@
 										});
 							},
 							_source : function(request, response) {
-								var matcher = new RegExp($.ui.autocomplete
-										.escapeRegex(request.term), "i");
 								response(this.element
 										.children("option")
 										.map(
 												function() {
 													var text = $(this).text();
-													var b = (this.value && (!request.term || matcher
-															.test(text)));
-													//	alert(b);
-													if (this.value
-															&& (!request.term || matcher
-																	.test(text)))
+													var term = request.term;
+													if (text.toLowerCase().startsWith(term.toLowerCase()))
 														return {
 															label : text,
 															value : text,
@@ -176,16 +171,24 @@
 		<div class="top"></div>
 		<div class="middle">
 			<form action="/event-airline-tickets" method="post">
-				<input name="artist" type="text" /> <select name="location"
+				Artist:
+				<input  name="artist" class="styledtxt" type="text" />
+				
+ My location:
+				
+				<select name="location"
 					id="combobox">
 					<option value=""></option>
-				</select> <input type="submit" value="Find events" />
+				</select>
+				<input class="btn" type="submit" value="Find events" />
 			</form>
 		</div>
 		<div class="center" id="results">
 			<div class="escape">
 				<div class="event">
-					<p class="name"></p>
+					<h3 class="name">
+						<a  target="_blank"  href=""></a>
+					</h3>
 					<p class="place"></p>
 					<table class="artists">
 						<tr>
@@ -198,7 +201,7 @@
 						</tr>
 					</table>
 					<p class="ticket">
-						<a  target="_blank"  href=""></a>
+		<!-- 			<a  target="_blank"  href=""></a> -->
 					</p>
 				</div>
 				<div class="trip">
@@ -247,7 +250,6 @@
 							<td > Carrier
 							</td>
 						</tr>
-					
 					</thead>
 					<tbody>
 						<tr>
@@ -261,16 +263,21 @@
 							</td>
 							<td class="carrier">
 							</td>
-						</tr></tbody>
-						
+						</tr>
+					</tbody>
+					<tfoot>
+    <tr >
+      <td colspan="4">Total price of round trip:</td>
+      <td colspan="1" class="price"></td>
+    </tr>
+  </tfoot>	
 					</table>
 					<h4></h4>
 				</div>
-				<h3 class="distance"></h3>
-				<h2 class="price"></h2>
+				<h4 class="distance"></h4>
+				<h3 class="price"></h3>
 			</div>
 		</div>
-		<div class="right"></div>
 		<div class="bottom"></div>
 	</div>
 </body>
