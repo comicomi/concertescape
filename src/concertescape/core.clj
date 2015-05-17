@@ -148,7 +148,7 @@
   )
 
 (defn request-events [artist]
-  (let [events ((parse-string (:body (client/get (str "http://api.seatgeek.com/2/events?per_page=2&page=1&sort=lowest_price.asc&performers.slug=" artist)))) "events")]
+  (let [events ((parse-string (:body (client/get (str "http://api.seatgeek.com/2/events?per_page=5&page=1&sort=lowest_price.asc&performers.slug=" artist)))) "events")]
     (for [i (range 0 (count events))] 
       (let [el (nth events i), 
             performers (el "performers"), 
@@ -298,8 +298,6 @@
   (GET "/" request (homepage request))
   (POST "/event-airline-tickets" request
         (let [artist  (:artist (:params request)), location  (:location (:params request))]
-          ; (reset! results (top-level-fun  artist location))
-          ;   (reset! results (sort-by #(% :total_score) (top-level-fun  artist location)))
           (top-level-fun  artist location)
           (homepage nil)
           )
