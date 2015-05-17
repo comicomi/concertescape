@@ -290,7 +290,7 @@
 
 (defn top-level-fun [artist location]
   (let [events (filter #(.after  (parse-date "yyyy-MM-dd" (:date %)) (now)) (request-events (replace-space artist)))] 
-    (reset! results (map get-result events (repeat (count events) location)))
+    (reset! results  (sort-by #(% :total_score) (map get-result events (repeat (count events) location))))
     )
   )
 (defroutes app*
