@@ -4,7 +4,7 @@
 ;Aarhus;Denmark;AAR
 ;Abadan;Iran;ABD
 ;Abeche;Chad;AEH
-;Aberdeen;United Kingdom;ABZ
+;Aberdeen;UK;ABZ
 ;Aberdeen, SD;USA;ABR
 ;Abidjan;Ivory Coast;ABJ
 ;Abilene, TX;USA;ABI
@@ -156,8 +156,8 @@
 ;Beira;Mozambique;BEW
 ;Beirut;Lebanon;BEY
 ;Belem;Brazil;BEL
-;Belfast - Harbour;United Kingdom;BHD
-;Belfast International;United Kingdom;BFS
+;Belfast - Harbour;UK;BHD
+;Belfast International;UK;BFS
 ;Belgaum;India;IXG
 ;Belgrad (Beograd);Yugoslavia;BEG
 ;Belize City;Belize;BZE
@@ -186,7 +186,7 @@
 ;Billund;Denmark;BLL
 ;Bintulu;Malaysia;BTU
 ;Biraro;Central African Republic;IRO
-;Birmingham;United Kingdom;BHX
+;Birmingham;UK;BHX
 ;Birmingham, AL;USA;BHM
 ;Bismarck/Mandan, ND;USA;BIS
 ;Bissau;Guinea Bissau;BXO
@@ -229,7 +229,7 @@
 ;Bridgetown, Grantley Adams Int'l;Barbados;BGI
 ;Brindisi;Italy;BDS
 ;Brisbane;Australia;BNE
-;Bristol;United Kingdom;BRS
+;Bristol;UK;BRS
 ;Broennoeysund;Norway;BNN
 ;Broken Hill;Australia;BHQ
 ;Brookings, SD;USA;BKX
@@ -265,13 +265,13 @@
 ;Calicut;India;CCJ
 ;Calvi;France;CLY
 ;Cambridge Bay;Canada;YCB
-;Cambrigde;United Kingdom;CBG
+;Cambrigde;UK;CBG
 ;Campo Grande;Brazil;CGR
 ;Canberra;Australia;CBR
 ;Cancun;Mexico;CUN
 ;Cape Town;South Africa;CPT
 ;Caracas;Venezuela;CCS
-;Cardiff;United Kingdom;CWL
+;Cardiff;UK;CWL
 ;Carlsbad, CA;USA;CLD
 ;Carnarvon;Australia;CVQ
 ;Carnot;Central African Republic;CRF
@@ -393,8 +393,8 @@
 ;Denver International Airport, CO;USA;DEN
 ;Dera Ismail Khan;Pakistan;DSK
 ;Derby;Australia;DRB
-;Derby (East Midlands);United Kingdom;EMA
-;Derry (Londonderry);United Kingdom;LDY
+;Derby (East Midlands);UK;EMA
+;Derry (Londonderry);UK;LDY
 ;Des Moines, IA;USA;DSM
 ;Detroit City, MI;USA;DET
 ;Detroit Metropolitan Wayne County Airport, MI;USA;DTW
@@ -433,7 +433,7 @@
 ;East London;South Africa;ELS
 ;Easter Island;Chile;IPC
 ;Eau Clarie, WI;USA;EAU
-;Edinburgh;United Kingdom;EDI
+;Edinburgh;UK;EDI
 ;Edmonton;Canada;YEA
 ;Edmonton, International;Canada;YEG
 ;Edmonton, Municipal;Canada;YXD
@@ -528,8 +528,8 @@
 ;Gilgit;Pakistan;GIL
 ;Gillam;Canada;YGX
 ;Gladstone;Australia;GLT
-;Glasgow, Prestwick;United Kingdom;PIK
-;Glasgow;United Kingdom;GLA
+;Glasgow, Prestwick;UK;PIK
+;Glasgow;UK;GLA
 ;Glasgow, MT;USA;GGW
 ;Glendive, MT;USA;GDV
 ;Goa;India;GOI
@@ -571,7 +571,7 @@
 ;Guarulhos Int'l - Sao Paulo;Brazil;GRU
 ;Guatemala City;Guatemala;GUA
 ;Guayaquil;Ecuador;GYE
-;Guernsey;United Kingdom;GCI
+;Guernsey;UK;GCI
 ;Gulfport/Biloxi, MS;USA;GPT
 ;Gulu;Uganda;ULU
 ;Gunnison/Crested Butte, CO;USA;GUC
@@ -635,7 +635,7 @@
 ;Huahine;French Polynesia;HUH
 ;Huatulco;Mexico;HUX
 ;Hue - Phu Bai;Viet Nam;HUI
-;Humberside;United Kingdom;HUY
+;Humberside;UK;HUY
 ;Huntington, OH;USA;HTS
 ;Huntsville, AL;USA;HSV
 ;Hurghada Int'l;Egypt;HRG
@@ -661,14 +661,14 @@
 ;International Falls, MN;USA;INL
 ;Inuvik;Canada;YEV
 ;Invercargill;New Zealand;IVC
-;Inverness;United Kingdom;INV
+;Inverness;UK;INV
 ;Inykern, CA;USA;IYK
 ;Iqaluit (Frobisher Bay);Canada;YFB
 ;Iquitos;Peru;IQT
 ;Irkutsk;Russia;IKT
 ;Ishigaki;Japan;LSG
 ;Islamabad - Islamabad Int'l;Pakistan;ISB
-;Isle of Man;United Kingdom;IOM
+;Isle of Man;UK;IOM
 ;Istanbul - Ataturk;Turkey;IST
 ;Ithaca/Cortland, NY;USA;ITH
 ;Ivalo;Finland;IVL
@@ -691,7 +691,7 @@
 ;Jamshedpur - Sonari;India;IXW
 ;Jeddah - King Abdulaziz Int'l;Saudi Arabia;JED
 ;Jerez de la Frontera/Cadiz;Spain;XRY
-;Jersey;United Kingdom;JER
+;Jersey;UK;JER
 ;Jerusalem;Israel;JRS
 ;Jinan;Shandong, China;TNA
 ;Jiwani;Pakistan;JIW
@@ -848,7 +848,7 @@
 ;Leaf Rapids;Canada;YLR
 ;Learmouth (Exmouth);Australia;LEA
 ;Lebanon, NH;USA;LEB
-;Leeds/Bradford;United Kingdom;LBA
+;Leeds/Bradford;UK;LBA
 ;Leinster;Australia;LER
 ;Leipzig;Germany;LEJ
 ;Lelystad;Netherlands;LEY
@@ -874,18 +874,18 @@
 ;Lisbon - Lisboa;Portugal;LIS
 ;Lismore;Australia;LSY
 ;Little Rock, AR;USA;LIT
-;Liverpool;United Kingdom;LPL
+;Liverpool;UK;LPL
 ;Lizard Island;Australia;LZR
 ;Ljubljana - Brnik;Slovenia;LJU
 ;Lockhart River;Australia;IRG
 ;Lome;Togo;LFW
 ;London;Canada;YXU
-;London;United Kingdom;LON
-;London - City Airport;United Kingdom;LCY
-;London - Gatwick;United Kingdom;LGW
-;London - Heathrow;United Kingdom;LHR
-;London - Luton;United Kingdom;LTN
-;London - Stansted;United Kingdom;STN
+;London;UK;LON
+;London - City Airport;UK;LCY
+;London - Gatwick;UK;LGW
+;London - Heathrow;UK;LHR
+;London - Luton;UK;LTN
+;London - Stansted;UK;STN
 ;Long Beach, CA;USA;LGB
 ;Long Island, AK;USA;LIJ
 ;Long Island, Islip, NY - Mac Arthur;USA;ISP
@@ -941,7 +941,7 @@
 ;Man;Ivory Coast;MJC
 ;Managua - Augusto C Sandino;Nicaragua;MGA
 ;Manaus;Brazil;MAO
-;Manchester;United Kingdom;MAN
+;Manchester;UK;MAN
 ;Manchester, NH;USA;MHT
 ;Manguna;Papua New Guinea;MFO
 ;Manihi;French Polynesia;XMH
@@ -1124,7 +1124,7 @@
 ;Newburgh, NY;USA;SWF
 ;Newcastle - Belmont;Australia;BEO
 ;Newcastle - Williamtown;Australia;NTL
-;Newcastle;United Kingdom;NCL
+;Newcastle;UK;NCL
 ;Newcastle;South Africa;NCS
 ;Newman;Australia;ZNE
 ;Newport News/Williamsburg, VA;USA;PHF
@@ -1172,7 +1172,7 @@
 ;Orange;Australia;OAG
 ;Orange County (Santa Ana), CA;USA;SNA
 ;Oranjemund;Namibia;OMD
-;Orkney;United Kingdom;KOI
+;Orkney;UK;KOI
 ;Orlando Metropolitan Area, FL;USA;ORL
 ;Orlando Int'l Airport, FL;MCO;ORL
 ;Orpheus Island;Australia;ORS
@@ -1503,11 +1503,11 @@
 ;Soendre Stroemfjord;Greenland;SFJ
 ;Sofia - Vrazhdebna;Bulgaria;SOF
 ;Sogndal;Norway;SOG
-;Southampton - Eastleigh;United Kingdom;SOU
+;Southampton - Eastleigh;UK;SOU
 ;South Bend, IN;USA;SBN
 ;South Indian Lake, MB;Canada;XSI
 ;South Molle Island;Australia;SOI
-;Southend;United Kingdom;SEN
+;Southend;UK;SEN
 ;Split;Croatia (Hrvatska);SPU
 ;Spokane, WA;USA;GEG
 ;Springbok;South Africa;SBU
@@ -1529,7 +1529,7 @@
 ;St. Pierre, NF;Canada;FSP
 ;St. Thomas;Virgin Islands;STT
 ;St. Vincent;St. Vincent;SVD
-;Stansted (London);United Kingdom;STN
+;Stansted (London);UK;STN
 ;State College/Belefonte, PA;USA;SCE
 ;Stavanger;Norway;SVG
 ;Steamboat Springs, CO;USA;HDN
@@ -1538,13 +1538,13 @@
 ;Stockholm - Arlanda;Sweden;ARN
 ;Stockholm - Bromma;Sweden;BMA
 ;Stockton, CA;USA;SCK
-;Stornway;United Kingdom;SYY
+;Stornway;UK;SYY
 ;Strassburg;France;SXB
 ;Streaky Bay;Australia;KBY
 ;Stuttgart - Echterdingen;Germany;STR
 ;Sui;Pakistan;SUL
 ;Sukkur;Pakistan;SKZ
-;Sumburgh (Shetland);United Kingdom;LSI
+;Sumburgh (Shetland);UK;LSI
 ;Sun Valley, ID;USA;SUN
 ;Sundsvall;Sweden;SDL
 ;Sunshine Coast;Australia;MCY
@@ -1576,7 +1576,7 @@
 ;Tawau;Malaysia;TWU
 ;Tbilisi - Novo Alexeyevka;Georgia;TBS
 ;Te Anau;New Zealand;TEU
-;Teesside, Durham Tees Valley;United Kingdom;MME
+;Teesside, Durham Tees Valley;UK;MME
 ;Tegucigalpa;Honduras;TGU
 ;Tehran (Teheran) - Mehrabad;Iran;THR
 ;Tel Aviv - Ben Gurion Int'l;Israel;TLV
@@ -1724,7 +1724,7 @@
 ;Whyalla;Australia;WYA
 ;Wichita Falls, TX;USA;SPS
 ;Wichita, KS;USA;ICT
-;Wick;United Kingdom;WIC
+;Wick;UK;WIC
 ;Wickham;Australia;WHM
 ;Wien (Vienna) - Vienna Int'l;Austria;VIE
 ;Wiesbaden, Air Base;Germany;WIE

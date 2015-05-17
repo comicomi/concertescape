@@ -3,7 +3,7 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8"></meta>
 <link rel="stylesheet"
 	href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
-	
+
 <link rel="stylesheet" type="text/css" href="style.css" />
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
@@ -171,106 +171,76 @@
 		<div class="top"></div>
 		<div class="middle">
 			<form action="/event-airline-tickets" method="post">
-				Artist:
-				<input  name="artist" class="styledtxt" type="text" />
-				
- My location:
-				
-				<select name="location"
-					id="combobox">
+				Artist: <input name="artist" class="styledtxt" type="text" /> My
+				location: <select name="location" id="combobox">
 					<option value=""></option>
-				</select>
-				<input class="btn" type="submit" value="Find events" />
+				</select> <input class="btn" type="submit" value="Find events" />
 			</form>
 		</div>
 		<div class="center" id="results">
 			<div class="escape">
 				<div class="event">
 					<h3 class="name">
-						<a  target="_blank"  href=""></a>
+						<a target="_blank" href=""></a>
 					</h3>
 					<p class="place"></p>
 					<table class="artists">
 						<tr>
-							<td>
-								<img alt="" src="" width="50px" height="50px" />
-								<p >
-								
-								</p>
-							</td>
+							<td><img alt="" src="" width="50px" height="50px" />
+								<p></p></td>
 						</tr>
 					</table>
 					<p class="ticket">
-		<!-- 			<a  target="_blank"  href=""></a> -->
+						<!-- 			<a  target="_blank"  href=""></a> -->
 					</p>
 				</div>
 				<div class="trip">
 					<table title="Departure" border="1" class="departure">
 						<thead>
-						<tr>
-						<td > Origin								
-							</td>
-							<td > Destination
-							</td>
-							<td > Departure date
-							</td>
-							<td > Arrival date
-							</td>
-							<td > Carrier
-							</td>
-						</tr>
-					
-					</thead>
-					<tbody>
-						<tr>
-							<td class="origin">								
-							</td>
-							<td class="destination">
-							</td>
-							<td class="departure_date">
-							</td>
-							<td class="arrival_date">
-							</td>
-							<td class="carrier">
-							</td>
-						</tr>
+							<tr>
+								<td>Origin</td>
+								<td>Destination</td>
+								<td>Departure date</td>
+								<td>Arrival date</td>
+								<td>Carrier</td>
+							</tr>
+
+						</thead>
+						<tbody>
+							<tr>
+								<td class="origin"></td>
+								<td class="destination"></td>
+								<td class="departure_date"></td>
+								<td class="arrival_date"></td>
+								<td class="carrier"></td>
+							</tr>
 						</tbody>
 					</table>
 					<table title="Arrival" border="1" class="arrival">
-					<thead>
-						<tr>
-						<td > Origin								
-							</td>
-							<td > Destination
-							</td>
-							<td > Departure date
-							</td>
-							<td > Arrival date
-							</td>
-							<td > Carrier
-							</td>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-						<td class="origin">								
-							</td>
-							<td class="destination">
-							</td>
-							<td class="departure_date">
-							</td>
-							<td class="arrival_date">
-							</td>
-							<td class="carrier">
-							</td>
-						</tr>
-					</tbody>
-					<tfoot>
-    <tr >
-      <td colspan="4">Total price of round trip:</td>
-      <td colspan="1" class="price"></td>
-    </tr>
-  </tfoot>	
+						<thead>
+							<tr>
+								<td>Origin</td>
+								<td>Destination</td>
+								<td>Departure date</td>
+								<td>Arrival date</td>
+								<td>Carrier</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="origin"></td>
+								<td class="destination"></td>
+								<td class="departure_date"></td>
+								<td class="arrival_date"></td>
+								<td class="carrier"></td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="4">Total price of round trip:</td>
+								<td colspan="1" class="price"></td>
+							</tr>
+						</tfoot>
 					</table>
 					<h4></h4>
 				</div>
