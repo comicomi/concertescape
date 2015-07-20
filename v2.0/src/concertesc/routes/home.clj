@@ -13,12 +13,14 @@
   (layout/render "about.html"))
 
 (defn index-page []
-  (layout/render "index.html"))
+  (layout/render "index.html"
+   (merge {:airports (db/get-airports)})))
 
 
 (defroutes home-routes
-  (GET "/" [] (home-page))
+  (GET "/" [] (index-page))
+  (POST "/event-airline-tickets" request (map str (select-keys (:params request) [:artist :location]))))
   (GET "/about" [] (about-page))
   (GET "/index" [] (index-page))
   (GET "/air" [] (map str (db/get-airports)))
-  (POST "/event-airline-tickets" request (select-keys (:params request) [:artist :location])))
+  (POST "/event-airline-tickets" request (map str (select-keys (:params request) [:artist :location]))))
