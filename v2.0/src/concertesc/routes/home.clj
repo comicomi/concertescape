@@ -3,7 +3,8 @@
             [compojure.core :refer [defroutes GET POST]]
             [ring.util.http-response :refer [ok]]
             [clojure.java.io :as io]
-            [concertesc.db.core :as db]))
+            [concertesc.db.core :as db]
+            [concertesc.routes.service :as service]))
 
 (defn home-page []
   (layout/render
@@ -16,11 +17,12 @@
   (layout/render "index.html"
    (merge {:airports (db/get-airports)})))
 
+(defn result-page [[artist location]]
+ (service/handle-req artist location))
 
 (defroutes home-routes
   (GET "/" [] (index-page))
-  (POST "/event-airline-tickets" request (map str (select-keys (:params request) [:artist :location]))))
   (GET "/about" [] (about-page))
   (GET "/index" [] (index-page))
   (GET "/air" [] (map str (db/get-airports)))
-  (POST "/event-airline-tickets" request (map str (select-keys (:params request) [:artist :location]))))
+  (POST "/event-airline-tickets" request (result-page (vals (select-keys (:params request) [:artist :location])))))
