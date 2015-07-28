@@ -5,14 +5,19 @@
 		<div class="middle">
 			<form action="/event-airline-tickets" method="post">
 				{% csrf-field %}
-                Artist: <input name="artist" class="styledtxt" type="text" /> My
-				location: <select name="location" id="combobox">
+                 <label for="artist">Artist:</label>
+                 <input name="artist" class="styledtxt" type="text" />
+                <br/>
+                 <label for="artist">My location:</label>
+                <select name="location" id="combobox">
 				{% for airport in airports %}
 
                 <option value="{{airport.iatacode}}">{{airport.name}} , {{airport.city}}, {{airport.country}}</option>
 
                 {% endfor %}
-                </select> <input class="btn" type="submit" value="Find events" />
+                </select>
+                  <br/>
+                <input id="button" class="btn" type="submit" value="Find events" />
 			</form>
 		</div>
 		<div class="center" id="results">

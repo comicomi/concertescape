@@ -11,7 +11,7 @@
 (defrecord Result [Event Trip total_price total_distance])
 
 (defn send-request [artist]
-  (client/get (str "http://api.seatgeek.com/2/events?per_page=5&page=1&sort=lowest_price.asc&performers.slug=" artist)))
+  (client/get (str "http://api.seatgeek.com/2/events?per_page=1&page=1&sort=lowest_price.asc&performers.slug=" artist)))
 
 (defn parse-response [response]
   ((-> response :body parse-string) "events"))

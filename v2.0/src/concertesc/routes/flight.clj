@@ -32,8 +32,9 @@
                  :content-type :json
                  :accept :json
                  :throw-entire-message? true}]
-    (client/post "https://www.googleapis.com/qpxExpress/v1/trips/search?key=AIzaSyDYM93xp8iYFCxfTdvfk2z3BpLBfXqDxB0&fields=trips/data(city(code,name),carrier(code,name),airport(code,city)),trips/tripOption(saleTotal,slice/segment/leg(origin,destination,arrivalTime,departureTime),pricing/fare(origin,destination,carrier))" request)))
-  ;;  (parse-string (:body (client/post "https://www.googleapis.com/qpxExpress/v1/trips/search?key=AIzaSyDYM93xp8iYFCxfTdvfk2z3BpLBfXqDxB0&fields=trips/data(city(code,name),carrier(code,name),airport(code,city)),trips/tripOption(saleTotal,slice/segment/leg(origin,destination,arrivalTime,departureTime),pricing/fare(origin,destination,carrier))" request)) true)))
+    ;;&fields=trips/data(city(code,name),carrier(code,name),airport(code,city)),trips/tripOption(saleTotal,slice/segment/leg(origin,destination,arrivalTime,departureTime),pricing/fare(origin,destination,carrier))
+  ;;   (client/post "https://www.googleapis.com/qpxExpress/v1/trips/search?key=AIzaSyDYM93xp8iYFCxfTdvfk2z3BpLBfXqDxB0&fields=trips/data(city(code,name),carrier(code,name),airport(code,city)),trips/tripOption(saleTotal,slice/segment/leg(origin,destination,arrivalTime,departureTime),pricing/fare(origin,destination,carrier))" request)))
+    (parse-string (:body (client/post "https://www.googleapis.com/qpxExpress/v1/trips/search?key=AIzaSyDYM93xp8iYFCxfTdvfk2z3BpLBfXqDxB0&fields=trips/data(city(code,name),carrier(code,name),airport(code,city)),trips/tripOption(saleTotal,slice/segment/leg(origin,destination,arrivalTime,departureTime),pricing/fare(origin,destination,carrier))" request)) true)))
 
 (defn send-flight-request [origin-code destination-code departure-date arrival-date]
   (let [body (create-request-body origin-code destination-code departure-date arrival-date)] (send-request body)))
@@ -47,13 +48,16 @@
    (send-flight-request origin_code destination_code departure_date arrival_date));;)
 
 (defn get-flights [event location]
-  (request-flight (get-flight-parameters event location)))
+  (let[[origin_code destination_code departure_date arrival_date] (get-flight-parameters event location)]
+    (if-not (nil? destination_code) (-> [origin_code destination_code departure_date arrival_date] request-flight process-response))))
+
+  ;;(request-flight (get-flight-parameters event location)))
 
 (defn process-flight-connection [connection]
-  {:dep-time (-> connection :leg :departureTime)
-   :arr-time (-> connection :leg :arrivalTime)
-   :origin (-> connection :leg :origin)
-   :destination (-> connection :leg :destination)
+  {:dep-time (-> connection :leg first :departureTime)
+   :arr-time (-> connection :leg first :arrivalTime)
+   :origin (-> connection :leg first :origin)
+   :destination (-> connection :leg first :destination)
    :carrier (-> connection :flight :carrier)})
 
 (defn process-response [body]
@@ -66,8 +70,8 @@
       ;;  (-> data :carrier (select-keys [:code :name]))
         carriermap  (-> data :carrier (select-keys [:code :name]))
         citymap (map (fn [city] (:code (first (filter #(= city (:city % 1)) (:airport data)))))
-                     (-> data :city (select-keys :code :name)))
+                     (-> data :city (select-keys [:code :name])))
         result (atom {:price price})]
-    (swap! result conj {:flight (map process-flight-connection (map :segment fares ))})))
+    (swap! result conj {:flight (map process-flight-connection (map #(-> % :segment first) fares))})))
 ;; inicijalizovati posle letove
 ;;(->Flight (citymap (:origin connection)) (citymap (:destination connection)) (format-date "yyyy-MM-dd 'at' hh:mm" (parse-date "yyyy-MM-dd'T'hh:mm" (:departureTime connection))) (format-date "yyyy-MM-dd 'at' hh:mm" (parse-date "yyyy-MM-dd'T'hh:mm" (:arrivalTime connection))) car)

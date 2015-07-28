@@ -13,6 +13,7 @@ body {
 .layout {
 	display: block;
 	width: 1050px;
+  height: 1050px;
 	margin: 0 auto 0 auto;
 }
 
@@ -22,16 +23,18 @@ body {
 	height: 200px;
 	width: 1050px;
 	background-image: url('/../img/cov.png');
+  opacity: 0.9;
 }
 
 .middle {
   background-color: black;
+  opacity: 0.9;
   float: left;
   clear: none;
-  height: 8%;
-  padding: 15px 0px 2px 60px;
-  margin: 2px 0 2px 0;
-  width: 990px;
+  height: 20%;
+  padding: 15px;
+  margin: 5px 0px;
+  width: 1050px;
   font-size: 20px;
   font-family: Georgia;
   font-weight: bold;
@@ -40,6 +43,7 @@ body {
 
 .center {
 	background-color: black;
+  opacity: 0.9;
 	float: left;
 	clear: none;
 	width: 1050px;
@@ -131,13 +135,12 @@ td {
   -webkit-border-radius: 28;
   -moz-border-radius: 28;
   border-radius: 28px;
-  font-family: Arial;
+  font-family: Georgia;
   color: #ffffff;
-  font-size: 20px;
-  padding: 10px 20px 10px 20px;
+  font-size: 18px;
+  font-weight: bold;
   border: solid #154461 2px;
   text-decoration: none;
-  margin-left: 50px;
 }
 
 .btn:hover {
@@ -147,12 +150,8 @@ td {
   background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
   background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
   background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+  color: black;
   text-decoration: none;
-}
-.styledtxt {
-  padding: 7px;
-  border: solid 5px #c9c9c9;
-  transition: border 0.3s;
 }
 
 table {
@@ -161,4 +160,50 @@ table {
 
 table.departure, table.arrival {
 	width: 550px;
+}
+
+input {
+  font-family: Georgia;
+  font-size: 15px;
+  color: black;
+  height: 30%;
+  width: 40%;
+  padding: 10px;
+  margin: 10px;
+}
+
+.ui-state-default {
+  margin-left:-7%;
+  height:  40px;
+  width: 20px;
+  background: white;
+}
+
+ul{
+  width: 20%
+}
+
+
+form {
+    width: 80%;
+    margin: 0 auto;
+}
+
+label, input {
+    /* in order to define widths */
+    display: inline-block;
+}
+
+label {
+    width: 30%;
+    /* positions the label text beside the input */
+    text-align: right;
+}
+
+
+#button{
+  height: 50px;
+  position:relative;
+  top:50%;
+  left:30%;
 }
