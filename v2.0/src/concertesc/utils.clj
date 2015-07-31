@@ -9,6 +9,7 @@
 ;;(def date-formatter (f/formatter "yyyy-MM-dd 'at' hh:mm"))
 
 (defn string->date [s] (f/parse date-formatter s))
+(defn date->string [date] (f/unparse date-formatter date))
 
 (defn replace-space [s]
   (clojure.string/replace s #" " "-"))
