@@ -11,3 +11,8 @@ SELECT * FROM airport2 ORDER BY name ASC
 -- retrieve specific city
 SELECT city FROM airport2
 WHERE iatacode=:iatacode
+
+--name:get-coordinates
+-- retrieve coordinates of a specific city
+SELECT latitude, longitude FROM airport2
+WHERE iatacode=:iatacode
