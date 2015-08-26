@@ -18,7 +18,8 @@
   (-> sql-date (.getTime) (java.util.Date.)))
 
 (defn find-destination [destination]
-  (-> (get-airport-by-city-and-country destination) first :iatacode))
+;  (-> (get-airport-by-city-and-country destination) first :iatacode))
+  (-> (get-airport destination) first :iatacode))
 
 (extend-protocol jdbc/IResultSetReadColumn
   java.sql.Date

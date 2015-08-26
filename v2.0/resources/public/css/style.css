@@ -92,7 +92,7 @@ thead:first-child td  {
   font-weight: bold;
   color: #ffffff;
 }
-tfoot td {
+.tripprice {
   background: -o-linear-gradient(bottom, #000000 5%, #191919 100%);
   background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #000000), color-stop(1, #191919) );
   background: -moz-linear-gradient( center top, #000000 5%, #191919 100% );

@@ -38,15 +38,26 @@
   (let [body (create-request-body origin-code destination-code departure-date arrival-date)]
     (-> body send-request :body (parse-string true))))
 
-(defn process-flight-connection [connection]
-;;  (str connection))
-    {:dep-time (-> connection :leg first :departureTime)
+(defn tryprocess [connection]
+  {:dep-time (-> connection :leg first :departureTime)
    :arr-time  (-> connection :leg first :arrivalTime)
-   :origin  (:city (first (db/get-city-by-airport-code {:iatacode (-> connection :leg first :origin)})))
-   :destination  (:city (first (db/get-city-by-airport-code {:iatacode (-> connection :leg first :destination)})))
-   :carrier (-> connection :flight :carrier)})
+  :origin  (:city (first (db/get-city-by-airport-code {:iatacode (-> connection :leg first :origin)})))
+  :destination  (:city (first (db/get-city-by-airport-code {:iatacode (-> connection :leg first :destination)})))
+   :carrier (-> connection :flight :carrier)}
+  )
+
+(defn process-flight-connection [connection]
+;; (str "la la " connection  "la la "))
+  (map tryprocess connection))
+ ;   {:dep-time (-> connection :leg first :departureTime)
+ ;  :arr-time  (-> connection :leg first :arrivalTime)
+ ;  :origin  (:city (first (db/get-city-by-airport-code {:iatacode (-> connection :leg first :origin)})))
+ ;  :destination  (:city (first (db/get-city-by-airport-code {:iatacode (-> connection :leg first :destination)})))
+;   :carrier (-> connection :flight :carrier)})
+
 
 (defn process-response [body]
+  (if (empty? body) {:error "No flights found"}
   (let [trip-option  (-> body :trips :tripOption first)
         price (-> trip-option :saleTotal (subs 3) java.lang.Double/parseDouble)
         fare-carriers  (-> trip-option :pricing first :fare)
@@ -54,8 +65,8 @@
         data (-> body :trips :data)
         carriers (:carrier data)
         carriermap  (-> data :carrier (select-keys [:code :name]))
-         result (atom {:price price})]
-    (swap! result conj {:flight (map process-flight-connection (map #(-> % :segment first) fares))})))
+        result (atom {:price price})]
+    (swap! result conj {:flight (map process-flight-connection (map #(% :segment) fares))}))))
 
 (defn get-flights [event location]
   (let[[origin-code destination-code departure-date arrival-date] (get-flight-parameters event location)]

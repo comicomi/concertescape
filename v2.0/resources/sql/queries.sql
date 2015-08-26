@@ -16,3 +16,11 @@ WHERE iatacode=:iatacode
 -- retrieve coordinates of a specific city
 SELECT latitude, longitude FROM airport2
 WHERE iatacode=:iatacode
+
+--name:get-airport
+-- retrieve specific airport
+SELECT iatacode FROM airport2 WHERE
+  CASE (SELECT count(iatacode) FROM airport2 WHERE name='All Airports' AND city=:city AND country=:country)
+   WHEN 1 THEN  name='All Airports' AND city=:city AND country=:country
+   ELSE city=:city AND country=:country
+  END
