@@ -11,7 +11,7 @@
 (defrecord Result [Event Trip total_price total_distance])
 
 (defn send-request [artist]
-  (client/get (str "http://api.seatgeek.com/2/events?per_page=5&page=1&sort=lowest_price.asc&performers.slug=" artist)))
+  (client/get (str "http://api.seatgeek.com/2/events?per_page=2&page=1&sort=lowest_price.asc&performers.slug=" artist)))
 
 (defn parse-response [response]
   ((-> response :body parse-string) "events"))
@@ -22,7 +22,8 @@
         place (->Place (venue "name") (venue "city") (venue "country") (vals (venue "location")))
         ticket (->Ticket ((event "stats") "lowest_price") (event "url"))
         artists (map #(->Performer (% "name") (% "image")) performers)]
-    (->Event (event "title") artists (subs (event "datetime_local") 0 (.indexOf (event "datetime_local") "T")) place ticket)))
+    (->Event (event "title") artists (event "datetime_local") place ticket)))
+ ;;  (->Event (event "title") artists (subs (event "datetime_local") 0 (.indexOf (event "datetime_local") "T")) place ticket)))
 
 (defn process-response [events]
   (map process-event events))
