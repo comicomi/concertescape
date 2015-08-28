@@ -26,7 +26,8 @@
  ;;  (->Event (event "title") artists (subs (event "datetime_local") 0 (.indexOf (event "datetime_local") "T")) place ticket)))
 
 (defn process-response [events]
-  (map process-event events))
+  (if (empty? events) {:error "No events were found... Please make sure you entered name of the performer correctly."}
+  (map process-event events)))
 
 (defn request-events [artist]
  (-> artist send-request parse-response process-response))

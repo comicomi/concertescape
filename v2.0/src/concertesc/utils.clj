@@ -38,9 +38,9 @@
                (* (process-d dlon)
                   (-> a first Math/cos)
                   (-> b first Math/cos)))]
-    (* 2
+    (Math/round (* 2
        6373
        (Math/atan2 (Math/sqrt res)
-                   (->> res (- 1) Math/sqrt)))))
+                   (->> res (- 1) Math/sqrt))))))
 
 (defn now [] (new java.util.Date))

@@ -86,7 +86,7 @@ thead:first-child td  {
   background-color: #000000;
   border: 0px solid #000000;
   text-align: center;
-  border-width: 0px 0px 1px 1px;
+  border-width: 1px 1px 1px 1px;
   font-size: 12px;
   font-family: Georgia;
   font-weight: bold;
@@ -99,9 +99,25 @@ thead:first-child td  {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000", endColorstr="#191919");
   background: -o-linear-gradient(top,#000000,191919);
   background-color: #000000;
-  border: 0px solid #000000;
+  border: 1px solid #000000;
   text-align: center;
-  border-width: 0px 0px 1px 1px;
+  border-width: 1px 1px 1px 1px;
+  font-size: 12px;
+  font-family: Georgia;
+  font-weight: bold;
+  color: #ffffff;
+  width: 550px;
+}
+.error {
+  background: -o-linear-gradient(bottom, #000000 5%, #191919 100%);
+  background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #000000), color-stop(1, #191919) );
+  background: -moz-linear-gradient( center top, #000000 5%, #191919 100% );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000", endColorstr="#191919");
+  background: -o-linear-gradient(top,#000000,191919);
+  background-color: #000000;
+  border: 1px solid #000000;
+  text-align: center;
+  border-width: 1px 1px 1px 1px;
   font-size: 12px;
   font-family: Georgia;
   font-weight: bold;
@@ -116,7 +132,7 @@ td {
   background: -o-linear-gradient(top,#003f7f,56aaff);
   background-color: #003f7f;
   border: 1px solid #000000;
-  border-width: 0px 1px 1px 0px;
+  border-width: 1px 1px 1px 1px;
   text-align: left;
   padding: 7px;
   font-size: 11px;

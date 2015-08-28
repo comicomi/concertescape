@@ -6,22 +6,21 @@
 
 
 (defn get-result [e  f location]
-  (if-not (nil? (:error f)) {:event e :error f}
+  (if-not (nil? (:error f)) f
   (let [place (:Place e),
         date (:date e),
         distance (dist/calculate-distance location (:location place))
-        final_result (list e f)]
-    (str f))))
-   ;;     inter_res (merge {:event e} f {:total_distance distance})
-  ;;      total_price (+  (inter_res :price) (-> inter_res :event :Ticket :price))
-  ;;      total_score  (reduce + (map #(* 0.5 %) (list distance total_price)))]
- ;;  (merge {:total_price total_price} inter_res {:total_score total_score}))))
+        final_result (list e f)
+       inter_res (merge {:event e} f {:total_distance distance})
+        total_price (+  (inter_res :price) (-> inter_res :event :Ticket :price))
+        total_score  (reduce + (map #(* 0.5 %) (list distance total_price)))]
+   (merge {:total_price total_price} inter_res {:total_score total_score}))))
 
 
 (defn handle-req [artist location]
-  (let [events (ev/request-events (util/replace-space artist))
-        flights (map #(flight/get-flights  % location) events)]
-    (map #(get-result %1 %2 location) events flights)))
+  (let [events (ev/request-events (util/replace-space artist))]
+     (if-not (nil? (:error events))  (list events)
+    (map #(get-result %1 %2 location) events (map #(flight/get-flights  % location) events)))))
 
 (defrecord Ticket [price url])
 (defrecord Performer [namep image_url])

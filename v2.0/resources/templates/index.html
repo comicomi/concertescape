@@ -22,7 +22,7 @@
 		</div>
 		<div class="center" id="results">
             {% for item in results %}
-			 {% if item.error|empty? %}
+            {% if item.error|empty? %}
             <div class="escape">
 
 				<div class="event">
@@ -79,12 +79,12 @@
 						</div>
 					<h4></h4>
 				</div>
-				<h4 class="distance">Total distance : {{item.total_distance}} km</h4>
-				<h3 class="price"> {{item.total_price}}</h3>
+				<h4 class="distance">Approximate total distance : {{item.total_distance}} km</h4>
+				<h3 class="price">Total price :  {{item.total_price}} $ </h3>
 
 			</div>
              {% else %}
-              <div class="tripprice">
+              <div class="error">
 
                         <p>{{item.error}}</p>
 

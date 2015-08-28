@@ -18,12 +18,12 @@
    (merge {:airports (db/get-airports)})))
 
 (defn result-page [[artist location]]
- (service/handle-req artist location))
+ (str (service/handle-req artist location)))
 
-;(defn result-page [[artist location]]
- ; (layout/render "index.html"
- ;  (merge {:airports (db/get-airports)
- ;         :results  (service/handle-req artist location)})))
+(defn result-page [[artist location]]
+  (layout/render "index.html"
+   (merge {:airports (db/get-airports)
+          :results  (service/handle-req artist location)})))
 
 (defroutes home-routes
   (GET "/" [] (index-page))
