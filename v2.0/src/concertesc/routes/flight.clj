@@ -69,9 +69,8 @@
     (let [trip-option  (-> body :trips :tripOption first)
           price (-> trip-option :saleTotal (subs 3) java.lang.Double/parseDouble)
           fares (:slice trip-option)
-          carriers (-> body :trips :data :carrier)
-          result (atom {:price price})]
-      (swap! result conj {:flight (map #(-> % :segment (process-flight-connectionn carriers)) fares)}))))
+          carriers (-> body :trips :data :carrier)]
+      (conj {:price price} {:flight (map #(-> % :segment (process-flight-connectionn carriers)) fares)}))))
 
 (defn get-flights [event location]
   (let[[origin-code destination-code departure-date arrival-date] (get-flight-parameters event location)]

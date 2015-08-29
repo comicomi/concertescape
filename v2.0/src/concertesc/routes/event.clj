@@ -3,7 +3,7 @@
             [clj-http.client :as client]))
 
 (defrecord Ticket [price url])
-(defrecord Performer [namep image_url])
+(defrecord Performer [namep image-url])
 (defrecord Place [namep city country location])
 (defrecord Event [namep performers date Place Ticket])
 

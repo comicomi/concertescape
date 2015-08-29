@@ -32,13 +32,14 @@
                     <tr>
                         {% for artist in item.event.performers %}
                         <td>
-                            <img alt="{{artist.namep}}" src="{{artist.image_url}}" width="50px" height="50px" />
+                            <img alt="{{artist.namep}}" src="{{artist.image-url}}" width="50px" height="50px" />
                             <p>{{artist.namep}}</p>
 
                         </td>
                         {% endfor %}
                     </tr>
                 </table>
+                <br/>
             </div>
             {% if item.flighterror|empty? %}
             <div class="trip">
@@ -74,8 +75,8 @@
                     {% endifequal %}
                 </table>
                 {% endfor %}
-                <h4 class="distance">Approximate total distance : {{item.total_distance}} km</h4>
-                <h3 class="price">Total price :  {{item.total_price}}$ </h3>
+                <h4 class="distance">Approximate total distance : {{item.total-distance}} km</h4>
+                <h3 class="price">Total price :  {{item.total-price}}$ </h3>
             </div>
             {% else %}
             <div class="error">
