@@ -4,7 +4,6 @@
             [concertesc.routes.event :as ev]
             [concertesc.routes.distance :as dist]))
 
-
 (defn get-result [e  f location]
   (if-not (nil? (:flighterror f))
     (merge {:event e} f)
@@ -16,7 +15,6 @@
           total_price (+  (inter_res :price) (-> inter_res :event :Ticket :price))
           total_score  (reduce + (map #(* 0.5 %) (list distance total_price)))]
       (merge {:total_price total_price} inter_res {:total_score total_score}))))
-
 
 (defn handle-req [artist location]
   (let [events (ev/request-events (util/replace-space artist))]
