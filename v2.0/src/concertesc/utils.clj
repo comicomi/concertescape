@@ -4,18 +4,14 @@
             [clj-time.format :as f])
   (:import [java.lang.Math]))
 
-;;"yyyy-MM-dd"
-(def date-formatter (f/formatter "yyyy-MM-dd'T'HH:mm:ss"))
-;;2015-10-13T19:00:00
-;;(def date-formatter (f/formatter "yyyy-MM-dd 'at' hh:mm"))
 (defn get-date-formatter [pattern]
   (f/formatter pattern))
 
-;;(defn string->date [s] (f/parse date-formatter s))
-;;(defn date->string [date] (f/unparse date-formatter date))
+(defn string->date [pattern s]
+  (f/parse (get-date-formatter pattern) s))
 
-(defn string->date [pattern s] (f/parse (get-date-formatter pattern) s))
-(defn date->string [pattern date] (f/unparse (get-date-formatter pattern) date))
+(defn date->string [pattern date]
+  (f/unparse (get-date-formatter pattern) date))
 
 (defn replace-space [s]
   (clojure.string/replace s #" " "-"))
