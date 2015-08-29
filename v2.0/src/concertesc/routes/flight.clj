@@ -14,9 +14,9 @@
   (generate-string {:request {:slice [{:origin origin-code ;"BCN";
                                        :destination destination-code ;"MUC" ;
                                        :date departure-date}
-                                     {:origin destination-code ;"YTO" ;
-                                      :destination origin-code ;"BEG" ;
-                                      :date arrival-date}]
+                                      {:origin destination-code ;"YTO" ;
+                                       :destination origin-code ;"BEG" ;
+                                       :date arrival-date}]
                               :passengers {:adultCount 1
                                            :infantInLapCount 0
                                            :infantInSeatCount 0
@@ -43,49 +43,37 @@
 
 (defn find-carrier [carrier carriermap]
   ((first (filter #(= (% :code) carrier) carriermap)) :name))
-;;(map str carriermap))
+
 (defn process-carrier [connection carriermap]
   (-> connection :flight :carrier (find-carrier carriermap)))
 
 (defn process-date [connection k]
-  (->> connection :leg first k (util/string->date "yyyy-MM-dd'T'HH:mmZ") (util/date->string "yyyy-MM-dd' at 'HH:mm")))
+  (->> connection :leg first k (util/string->date "yyyy-MM-dd'T'HH:mmZ") (util/date->string "dd.MM.yyyy' at 'HH:mm")))
 
 (defn process-connection [connection carriermap]
   {:dep-time (process-date connection :departureTime)
    :arr-time  (process-date connection :arrivalTime)
-  :origin  (process-city connection :origin)
-  :destination  (process-city connection :destination)
-   :carrier (process-carrier connection carriermap)}
-  )
-
-(defn tryprocess [connection]
-  {:dep-time (-> connection :leg first :departureTime)
-   :arr-time  (-> connection :leg first :arrivalTime)
-  :origin  (:city (first (db/get-city-by-airport-code {:iatacode (-> connection :leg first :origin)})))
-  :destination  (:city (first (db/get-city-by-airport-code {:iatacode (-> connection :leg first :destination)})))
-   :carrier (-> connection :flight :carrier)}
-  )
+   :origin  (process-city connection :origin)
+   :destination  (process-city connection :destination)
+   :carrier (process-carrier connection carriermap)})
 
 (defn process-flight-connectionn [connection carriermap]
   (map  #(process-connection % carriermap) connection))
-
-(defn process-flight-connection [connection]
-  (map tryprocess connection))
 
 (defn get-carriers [carrier]
   {(:code carrier) (:name carrier)})
 
 (defn process-response [body]
-  (if (empty? body) {:error "No flights were found."}
-  (let [trip-option  (-> body :trips :tripOption first)
-        price (-> trip-option :saleTotal (subs 3) java.lang.Double/parseDouble)
-        fare-carriers  (-> trip-option :pricing first :fare)
-        fares (:slice trip-option)
-        data (-> body :trips :data)
-        carrierss (:carrier data)
-        result (atom {:price price})]
-    (swap! result conj {:flight (map #(-> % :segment (process-flight-connectionn carrierss)) fares)}))))
+  (if (empty? body)
+    {:flighterror "No flights were found."}
+    (let [trip-option  (-> body :trips :tripOption first)
+          price (-> trip-option :saleTotal (subs 3) java.lang.Double/parseDouble)
+          fares (:slice trip-option)
+          carriers (-> body :trips :data :carrier)
+          result (atom {:price price})]
+      (swap! result conj {:flight (map #(-> % :segment (process-flight-connectionn carriers)) fares)}))))
 
 (defn get-flights [event location]
   (let[[origin-code destination-code departure-date arrival-date] (get-flight-parameters event location)]
-    (if-not (nil? destination-code) (-> [origin-code destination-code departure-date arrival-date] send-flight-request process-response))))
+    (if-not (nil? destination-code)
+      (-> [origin-code destination-code departure-date arrival-date] send-flight-request process-response))))

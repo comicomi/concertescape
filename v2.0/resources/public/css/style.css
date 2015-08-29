@@ -1,5 +1,5 @@
 * {
-	padding: 0;
+  padding: 0;
 	margin: 0;
 	border: 0;
 }
@@ -60,15 +60,15 @@ body {
 	margin: 5px auto;
 	text-align: center;
 }
-/*
-.right {
+
+/*.right {
 	background-color: rgba(0, 36, 47, 0.4);
 	float: left;
 	clear: none;
 	height: 600px;
 	width: 400px;
-}
-*/
+}*/
+
 .bottom {
 	background-color: rgba(0, 36, 47, 0.4);
 	float: left;
@@ -77,37 +77,6 @@ body {
 	width: 1050px;
 }
 
-thead:first-child td  {
-  background: -o-linear-gradient(bottom, #000000 5%, #191919 100%);
-  background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #000000), color-stop(1, #191919) );
-  background: -moz-linear-gradient( center top, #000000 5%, #191919 100% );
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000", endColorstr="#191919");
-  background: -o-linear-gradient(top,#000000,191919);
-  background-color: #000000;
-  border: 0px solid #000000;
-  text-align: center;
-  border-width: 1px 1px 1px 1px;
-  font-size: 12px;
-  font-family: Georgia;
-  font-weight: bold;
-  color: #ffffff;
-}
-.tripprice {
-  background: -o-linear-gradient(bottom, #000000 5%, #191919 100%);
-  background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #000000), color-stop(1, #191919) );
-  background: -moz-linear-gradient( center top, #000000 5%, #191919 100% );
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000", endColorstr="#191919");
-  background: -o-linear-gradient(top,#000000,191919);
-  background-color: #000000;
-  border: 1px solid #000000;
-  text-align: center;
-  border-width: 1px 1px 1px 1px;
-  font-size: 12px;
-  font-family: Georgia;
-  font-weight: bold;
-  color: #ffffff;
-  width: 550px;
-}
 .error {
   background: -o-linear-gradient(bottom, #000000 5%, #191919 100%);
   background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #000000), color-stop(1, #191919) );
@@ -123,6 +92,7 @@ thead:first-child td  {
   font-weight: bold;
   color: #ffffff;
 }
+
 td {
   vertical-align: middle;
   background: -o-linear-gradient(bottom, #003f7f 5%, #56aaff 100%);
@@ -138,6 +108,22 @@ td {
   font-size: 11px;
   font-family: Arial;
   font-weight: normal;
+  color: #ffffff;
+}
+
+thead tr td, tfoot  tr td {
+  background: -o-linear-gradient(bottom, #000000 5%, #191919 100%);
+  background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #000000), color-stop(1, #191919) );
+  background: -moz-linear-gradient( center top, #000000 5%, #191919 100% );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000", endColorstr="#191919");
+  background: -o-linear-gradient(top,#000000,191919);
+  background-color: #000000;
+  border: 0px solid #000000;
+  text-align: center;
+  border-width: 1px 1px 1px 1px;
+  font-size: 12px;
+  font-family: Georgia;
+  font-weight: bold;
   color: #ffffff;
 }
 
@@ -174,7 +160,7 @@ table {
 	margin: 0px auto;
 }
 
-table.departure, table.arrival {
+table.connection {
 	width: 550px;
 }
 
@@ -199,23 +185,19 @@ ul{
   width: 20%
 }
 
-
 form {
     width: 80%;
     margin: 0 auto;
 }
 
 label, input {
-    /* in order to define widths */
     display: inline-block;
 }
 
 label {
     width: 30%;
-    /* positions the label text beside the input */
     text-align: right;
 }
-
 
 #button{
   height: 50px;

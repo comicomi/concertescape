@@ -10,4 +10,4 @@
 
 (defn calculate-distance [origin destination]
    (util/calculate-distance (-> origin get-coordinates degrees->radians)
-                                            (degrees->radians destination)))
+                            (degrees->radians destination)))

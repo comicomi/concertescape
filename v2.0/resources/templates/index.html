@@ -1,97 +1,95 @@
 {% extends "base.html" %}
 {% block content %}
-	<div class="layout">
-		<div class="top"></div>
-		<div class="middle">
-			<form action="/event-airline-tickets" method="post">
-				{% csrf-field %}
-                 <label for="artist">Artist:</label>
-                 <input name="artist" class="styledtxt" type="text" />
-                <br/>
-                 <label for="artist">My location:</label>
-                <select name="location" id="combobox">
-				{% for airport in airports %}
-
+<div class="layout">
+    <div class="top"></div>
+    <div class="middle">
+        <form action="/event-airline-tickets" method="post">
+            {% csrf-field %}
+            <label for="artist">Artist:</label>
+            <input name="artist" class="styledtxt" type="text" />
+            <br/>
+            <label for="artist">My location:</label>
+            <select name="location" id="combobox">
+                {% for airport in airports %}
                 <option value="{{airport.iatacode}}"> {{airport.city}}, {{airport.name}}, {{airport.country}}</option>
-
                 {% endfor %}
-                </select>
-                  <br/>
-                <input id="button" class="btn" type="submit" value="Find events" />
-			</form>
-		</div>
-		<div class="center" id="results">
-            {% for item in results %}
-            {% if item.error|empty? %}
-            <div class="escape">
-
-				<div class="event">
-					<h3 class="name">
-                        {{item.event.namep}} -
-						<a target="_blank" href="{{item.event.Ticket.url}}">{{item.event.Ticket.price}} $</a>
-					</h3>
-					<p class="place">{{item.event.Place.namep}}, {{item.event.Place.city}}, {{item.event.Place.country}}</p>
-					<table class="artists">
-                        <tr>
+            </select>
+            <br/>
+            <input id="button" class="btn" type="submit" value="Find events" />
+        </form>
+    </div>
+    <div class="center" id="results">
+        {% for item in results %}
+        {% if item.eventerror|empty? %}
+        <div class="escape">
+            <div class="event">
+                <h3 class="name">
+                    {{item.event.namep}} -
+                    <a target="_blank" href="{{item.event.Ticket.url}}"> Buy now for only {{item.event.Ticket.price}}$</a>
+                </h3>
+                <p class="place">{{item.event.Place.namep}}, {{item.event.Place.city}}, {{item.event.Place.country}}</p>
+                <table class="artists">
+                    <tr>
                         {% for artist in item.event.performers %}
+                        <td>
+                            <img alt="{{artist.namep}}" src="{{artist.image_url}}" width="50px" height="50px" />
+                            <p>{{artist.namep}}</p>
 
-							<td><img alt="{{artist.namep}}" src="{{artist.image_url}}" width="50px" height="50px" />
-								<p>{{artist.namep}}</p></td>
-
+                        </td>
                         {% endfor %}
-                            </tr>
-					</table>
-					<p class="ticket">
-
-					</p>
-				</div>
-				<div class="trip">
-                      {% for direction in item.flight %}
-					<table title="Arrival" border="1" class="arrival">
-						<thead>
-							<tr>
-								<td>Origin</td>
-								<td>Destination</td>
-								<td>Departure date</td>
-								<td>Arrival date</td>
-								<td>Carrier</td>
-							</tr>
-						</thead>
-						<tbody>
-                         {% for connection in direction %}
-							<tr>
-								<td class="origin">{{connection.origin}}</td>
-								<td class="destination">{{connection.destination}}</td>
-								<td class="departure_date">{{connection.dep-time}}</td>
-								<td class="arrival_date">{{connection.arr-time}}</td>
-								<td class="carrier">{{connection.carrier}}</td>
-							</tr>
-                           {% endfor %}
-						</tbody>
-
-					</table>
-
-                     {% endfor %}
-                     <div class="tripprice">
-
-                        <p>Total price of round trip: {{item.price}} $</p>
-
-						</div>
-					<h4></h4>
-				</div>
-				<h4 class="distance">Approximate total distance : {{item.total_distance}} km</h4>
-				<h3 class="price">Total price :  {{item.total_price}} $ </h3>
-
-			</div>
-             {% else %}
-              <div class="error">
-
-                        <p>{{item.error}}</p>
-
-						</div>
-               {% endif %}
-            {% endfor %}
-		</div>
-		<div class="bottom"></div>
-	</div>
+                    </tr>
+                </table>
+            </div>
+            {% if item.flighterror|empty? %}
+            <div class="trip">
+                {% for direction in item.flight %}
+                <table title="Connection" border="1" class="connection">
+                    <thead>
+                        <tr>
+                            <td>Origin</td>
+                            <td>Destination</td>
+                            <td>Departure date</td>
+                            <td>Arrival date</td>
+                            <td>Carrier</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for connection in direction %}
+                        <tr>
+                            <td class="origin">{{connection.origin}}</td>
+                            <td class="destination">{{connection.destination}}</td>
+                            <td class="departure_date">{{connection.dep-time}}</td>
+                            <td class="arrival_date">{{connection.arr-time}}</td>
+                            <td class="carrier">{{connection.carrier}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    {% ifequal direction item.flight|last %}
+                    <tfoot>
+                        <tr>
+                            <td colspan="4">Total price of round trip:</td>
+                            <td colspan="1" class="price"> {{item.price}} $ </td>
+                        </tr>
+                    </tfoot>
+                    {% endifequal %}
+                </table>
+                {% endfor %}
+                <h4 class="distance">Approximate total distance : {{item.total_distance}} km</h4>
+                <h3 class="price">Total price :  {{item.total_price}}$ </h3>
+            </div>
+            {% else %}
+            <div class="error">
+                <p>{{item.flighterror}}</p>
+            </div>
+            {% endif %}
+        </div>
+        {% else %}
+        <div class="error">
+            <p>{{item.eventerror}}</p>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <div class="bottom"></div>
+</div>
 {% endblock %}
