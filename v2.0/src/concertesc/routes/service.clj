@@ -10,10 +10,9 @@
     (merge {:event e} f)
     (let [place (:Place e),
           date (:date e),
-          distance (dist/calculate-distance location (:location place))
-          final-result (list e f)
-          inter-res (merge {:event e} f {:total-distance distance})
-          total-price (+  (inter-res :price) (-> inter-res :event :Ticket :price))
+          distance (dist/calculate-distance location (:location place)),
+          inter-res (merge {:event e} f {:total-distance distance}),
+          total-price (+  (inter-res :price) (-> inter-res :event :Ticket :price)),
           total-score  (reduce + (map #(* 0.5 %) (list distance total-price)))]
       (merge {:total-price total-price} inter-res {:total-score total-score}))))
 
