@@ -25,7 +25,8 @@
                  [mysql/mysql-connector-java "5.1.6"]
                  [clj-time "0.10.0"]
                  [cheshire "5.5.0"]
-                 [clj-http "2.0.0"]]
+                 [clj-http "2.0.0"]
+                 [criterium "0.4.3"]]
 
   :min-lein-version "2.0.0"
   :uberjar-name "concertesc.jar"

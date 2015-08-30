@@ -57,11 +57,8 @@
    :destination  (process-city connection :destination)
    :carrier (process-carrier connection carriermap)})
 
-(defn process-flight-connectionn [connection carriermap]
+(defn process-flight-connection [connection carriermap]
   (map  #(process-connection % carriermap) connection))
-
-(defn get-carriers [carrier]
-  {(:code carrier) (:name carrier)})
 
 (defn process-response [body]
   (if (empty? body)
@@ -70,7 +67,7 @@
           price (-> trip-option :saleTotal (subs 3) java.lang.Double/parseDouble)
           fares (:slice trip-option)
           carriers (-> body :trips :data :carrier)]
-      (conj {:price price} {:flight (map #(-> % :segment (process-flight-connectionn carriers)) fares)}))))
+      (conj {:price price} {:flight (map #(-> % :segment (process-flight-connection carriers)) fares)}))))
 
 (defn get-flights [event location]
   (let[[origin-code destination-code departure-date arrival-date] (get-flight-parameters event location)]

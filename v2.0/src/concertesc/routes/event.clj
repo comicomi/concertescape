@@ -8,7 +8,7 @@
 (defrecord Event [namep performers date Place Ticket])
 
 (defn send-request [artist]
-  (client/get (str "http://api.seatgeek.com/2/events?per_page=2&page=1&sort=lowest_price.asc&performers.slug=" artist)))
+  (client/get (str "http://api.seatgeek.com/2/events?per_page=5&page=1&sort=lowest_price.asc&performers.slug=" artist)))
 
 (defn parse-response [response]
   ((-> response :body parse-string) "events"))
