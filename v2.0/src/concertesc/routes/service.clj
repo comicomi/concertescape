@@ -3,8 +3,7 @@
             [concertesc.routes.flight :as flight]
             [concertesc.routes.event :as ev]
             [concertesc.routes.distance :as dist]
-            ;[concertesc.routes.improvement :as imp]
-            ))
+            [concertesc.routes.improvement :as imp]))
 
 (defn get-result [e  f location]
   (if-not (nil? (:flighterror f))

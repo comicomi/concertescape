@@ -30,45 +30,45 @@
 
 ;flight
 
-(def param1 (-> "tove-lo" ev/request-events first))
+;(def param1 (-> "tove-lo" ev/request-events first))
 
-(criterium/with-progress-reporting (criterium/bench (flight/get-flight-parameters param1 "BCN") :verbose))
+;(criterium/with-progress-reporting (criterium/bench (flight/get-flight-parameters param1 "BCN") :verbose))
 
-(criterium/with-progress-reporting (criterium/bench (flight/create-request-body "BCN" "MUC" "2015-10-05" "2015-10-07") :verbose))
+;(criterium/with-progress-reporting (criterium/bench (flight/create-request-body "BCN" "MUC" "2015-10-05" "2015-10-07") :verbose))
 
-(def param2 (flight/create-request-body "BCN" "MUC" "2015-10-05" "2015-10-07"))
+;(def param2 (flight/create-request-body "BCN" "MUC" "2015-10-05" "2015-10-07"))
 
-(criterium/with-progress-reporting (criterium/bench (flight/send-request param2) :verbose))
+;(criterium/with-progress-reporting (criterium/bench (flight/send-request param2) :verbose))
 
-(criterium/with-progress-reporting (criterium/bench (flight/send-flight-request ["BCN" "MUC" "2015-10-05" "2015-10-07"]) :verbose))
+;(criterium/with-progress-reporting (criterium/bench (flight/send-flight-request ["BCN" "MUC" "2015-10-05" "2015-10-07"]) :verbose))
 
-(def body (flight/send-flight-request ["BCN" "MUC" "2015-10-05" "2015-10-07"]))
+;(def body (flight/send-flight-request ["BCN" "MUC" "2015-10-05" "2015-10-07"]))
 
-(def connection (-> body :trips :tripOption first :slice first :segment))
+;(def connection (-> body :trips :tripOption first :slice first :segment))
 
-(def carriermap (-> body :trips :data :carrier))
+;(def carriermap (-> body :trips :data :carrier))
 
-(def param3 (first connection))
+;(def param3 (first connection))
 
-(def param4 (-> param3 :flight :carrier ))
+;(def param4 (-> param3 :flight :carrier ))
 
-(criterium/with-progress-reporting (criterium/bench (flight/process-city param3 :origin) :verbose))
+;(criterium/with-progress-reporting (criterium/bench (flight/process-city param3 :origin) :verbose))
 
-(criterium/with-progress-reporting (criterium/bench (flight/find-carrier param4 carriermap) :verbose))
+;(criterium/with-progress-reporting (criterium/bench (flight/find-carrier param4 carriermap) :verbose))
 
-(criterium/with-progress-reporting (criterium/bench (flight/process-carrier param3 carriermap) :verbose))
+;(criterium/with-progress-reporting (criterium/bench (flight/process-carrier param3 carriermap) :verbose))
 
-(criterium/with-progress-reporting (criterium/bench (flight/process-date param3 :departureTime) :verbose))
+;(criterium/with-progress-reporting (criterium/bench (flight/process-date param3 :departureTime) :verbose))
 
-(criterium/with-progress-reporting (criterium/bench (flight/process-connection param3 carriermap) :verbose))
+;(criterium/with-progress-reporting (criterium/bench (flight/process-connection param3 carriermap) :verbose))
 
-(criterium/with-progress-reporting (criterium/bench (flight/process-flight-connection connection carriermap) :verbose))
+;(criterium/with-progress-reporting (criterium/bench (flight/process-flight-connection connection carriermap) :verbose))
 
-(def param5 (flight/send-flight-request ["BCN" "MUC" "2015-10-05" "2015-10-07"]))
+;(def param5 (flight/send-flight-request ["BCN" "MUC" "2015-10-05" "2015-10-07"]))
 
-(criterium/with-progress-reporting (criterium/bench (flight/process-response param5) :verbose))
+;(criterium/with-progress-reporting (criterium/bench (flight/process-response param5) :verbose))
 
-(criterium/with-progress-reporting (criterium/bench (flight/get-flights param1 "BCN") :verbose))
+;(criterium/with-progress-reporting (criterium/bench (flight/get-flights param1 "BCN") :verbose))
 
 
 ;event
