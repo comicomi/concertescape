@@ -11,7 +11,7 @@
             <label for="artist">My location:</label>
             <select name="location" id="combobox">
                 {% for airport in airports %}
-                <option value="{{airport.iatacode}}"> {{airport.city}}, {{airport.name}}, {{airport.country}}</option>
+                <option value="{{airport.iatacode}}">{{airport.city}}, {{airport.name}}, {{airport.country}}</option>
                 {% endfor %}
             </select>
             <br/>
