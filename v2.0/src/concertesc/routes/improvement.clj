@@ -3,8 +3,7 @@
             [concertesc.utils :as util]
             [concertesc.routes.flight :as flight]
             [concertesc.routes.event :as ev]
-            [concertesc.routes.distance :as dist]
-            [concertesc.routes.distance :as service]))
+            [concertesc.routes.distance :as dist]))
 
 ;utils
 
@@ -69,7 +68,6 @@
 ;(criterium/with-progress-reporting (criterium/bench (flight/process-response param5) :verbose))
 
 ;(criterium/with-progress-reporting (criterium/bench (flight/get-flights param1 "BCN") :verbose))
-
 
 ;event
 
