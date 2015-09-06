@@ -3,6 +3,7 @@
             [concertesc.routes.flight :as flight]
             [concertesc.routes.event :as ev]
             [concertesc.routes.distance :as dist]
+           ; [concertesc.routes.improvement :as imp]
             [criterium.core :as criterium]))
 
 (defn get-result [e  f location]
@@ -29,5 +30,3 @@
 ;(criterium/with-progress-reporting (criterium/bench (get-result param1  param2  "BCN") :verbose))
 
 ;(criterium/with-progress-reporting (criterium/bench (handle-req "tove-lo"  "BCN") :verbose))
-
-
