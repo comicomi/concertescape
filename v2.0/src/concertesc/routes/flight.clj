@@ -72,4 +72,5 @@
 (defn get-flights [event location]
   (let[[origin-code destination-code departure-date arrival-date] (get-flight-parameters event location)]
     (if-not (nil? destination-code)
-      (-> [origin-code destination-code departure-date arrival-date] send-flight-request process-response))))
+      (-> [origin-code destination-code departure-date arrival-date] send-flight-request process-response)
+      {:flighterror "No dest flights were found."})))

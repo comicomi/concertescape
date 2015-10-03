@@ -13,6 +13,9 @@
 (defn date->string [pattern date]
   (f/unparse (get-date-formatter pattern) date))
 
+(defn iterator->seq [iterator]
+  (iterator-seq iterator))
+
 (defn replace-space [s]
   (clojure.string/replace s #" " "-"))
 

@@ -19,6 +19,7 @@
         </form>
     </div>
     <div class="center" id="results">
+        {% for results in all %}
         {% for item in results %}
         {% if item.eventerror|empty? %}
         <div class="escape">
@@ -86,9 +87,11 @@
         </div>
         {% else %}
         <div class="error">
+            <h3 class="name" style="text-transform:capitalize">{{item.artist}}</h3>
             <p>{{item.eventerror}}</p>
         </div>
         {% endif %}
+        {% endfor %}
         {% endfor %}
     </div>
     <div class="bottom"></div>

@@ -18,8 +18,16 @@
   (-> sql-date (.getTime) (java.util.Date.)))
 
 (defn find-destination [destination]
-;  (-> (get-airport-by-city-and-country destination) first :iatacode))
   (-> (get-airport destination) first :iatacode))
+
+;(defn store-recommendation [params]
+ ; (store-loglikelihood! params))
+
+(defn resolve-artist-by-name [artist]
+  (-> (get-artist-by-name artist) first :id))
+
+(defn resolve-artist-by-id [artistid]
+  (-> (get-artist-by-id artistid) first :name))
 
 (extend-protocol jdbc/IResultSetReadColumn
   java.sql.Date
