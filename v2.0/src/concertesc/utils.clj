@@ -28,7 +28,7 @@
 (defn degrees->radians [x]
   (* (/ Math/PI 180) x))
 
-(defn- process-d [x]
+(defn process-d [x]
   (-> x (/ 2) Math/sin (Math/pow 2)))
 
 (defn calculate-distance [a b]   ;;u pozivu metode se pretpostavlja da su kordinate u radijanima

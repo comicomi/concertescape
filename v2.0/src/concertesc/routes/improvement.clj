@@ -3,7 +3,9 @@
             [concertesc.utils :as util]
             [concertesc.routes.flight :as flight]
             [concertesc.routes.event :as ev]
-            [concertesc.routes.distance :as dist]))
+            [concertesc.routes.distance :as dist]
+            [concertesc.routes.artist :as art]
+            [concertesc.routes.dataset :as data]))
 
 ;utils
 
@@ -15,9 +17,11 @@
 
 ;(criterium/with-progress-reporting (criterium/bench (util/date->string "yyyy-MM-dd" param) :verbose))
 
+;(criterium/with-progress-reporting (criterium/bench (util/iterator->seq (.iterator (java.util.ArrayList. [1 2 3]))) :verbose))
+
 ;(criterium/with-progress-reporting (criterium/bench (util/replace-space "tove lo") :verbose))
 
-;(criterium/with-progress-reporting (criterium/bench (util/get-following-or-preceding-date :plus param) :verbose))
+;(criterium/with-progress-reporting (criterium/bench (util/get-following-or-preceding-date :plus 1 param) :verbose))
 
 ;(criterium/with-progress-reporting (criterium/bench (util/degrees->radians 60) :verbose))
 
@@ -25,7 +29,7 @@
 
 ;(criterium/with-progress-reporting (criterium/bench (util/calculate-distance [3.14 2.15] [30.15 8.11]) :verbose))
 
-;(criterium/with-progress-reporting (criterium/bench util/now :verbose))
+;(criterium/with-progress-reporting (criterium/bench util/future-date :verbose))
 
 ;flight
 
@@ -94,3 +98,17 @@
 ;(criterium/with-progress-reporting (criterium/bench (dist/degrees->radians [60 90]) :verbose))
 
 ;(criterium/with-progress-reporting (criterium/bench (dist/calculate-distance "BCN" [90 120]) :verbose))
+
+;artist
+
+;(criterium/with-progress-reporting (criterium/bench (art/resolve-artist-by-name "madonna") :verbose))
+
+;(criterium/with-progress-reporting (criterium/bench (art/resolve-artist-by-id 14) :verbose))
+
+;data
+
+;(criterium/with-progress-reporting (criterium/bench (data/get-precomputed-recommender "./data/preparedData.csv" "./data/precomputedSimilaritiesL.csv") :verbose))
+
+;(criterium/with-progress-reporting (criterium/bench (data/get-recommendation 14 5 "./data/preparedData.csv" "./data/precomputedSimilaritiesL.csv") :verbose))
+
+;(criterium/with-progress-reporting (criterium/bench (data/get-recommendation 14 5 "./data/preparedData.csv" "./data/precomputedSimilaritiesT.csv") :verbose))
