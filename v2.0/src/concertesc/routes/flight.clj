@@ -6,7 +6,7 @@
 
 (defn get-flight-parameters [event location]
   (conj
-   (map #(->> (:date event) (util/string->date "yyyy-MM-dd'T'HH:mm:ss") (util/get-following-or-preceding-date %)) [:minus :plus])
+   (map #(->> (:date event) (util/string->date "yyyy-MM-dd'T'HH:mm:ss") (util/get-following-or-preceding-date % 1)) [:minus :plus])
    (db/find-destination (select-keys (:Place event) [:city :country]))
    location))
 
@@ -73,4 +73,4 @@
   (let[[origin-code destination-code departure-date arrival-date] (get-flight-parameters event location)]
     (if-not (nil? destination-code)
       (-> [origin-code destination-code departure-date arrival-date] send-flight-request process-response)
-      {:flighterror "No dest flights were found."})))
+     {:flighterror "No flights were found."})))

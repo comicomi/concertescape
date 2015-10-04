@@ -13,7 +13,7 @@
     (merge {:event e} f)
     (let [place (:Place e),
           date (:date e),
-          distance (dist/calculate-distance location (:location place)),
+          distance (dist/calculate-distance location (:location place))
           inter-res (merge {:event e} f {:total-distance distance}),
           total-price (+  (inter-res :price) (-> inter-res :event :Ticket :price)),
           total-score  (reduce + (map #(* 0.5 %) (list distance total-price)))]
@@ -22,16 +22,18 @@
 (defn find-similiar-artists [artist]
   (let [artistid (art/resolve-artist-by-name artist)]
     (if-not (nil? artistid)
-   (map art/resolve-artist-by-id
-         (data/get-recommendation (long artistid) (int 2) "./data/preparedData.csv" "./data/precomputedSimilaritiesL.csv")))))
+      (map art/resolve-artist-by-id
+           (data/get-recommendation (long artistid) (int 2) "./data/preparedData.csv" "./data/precomputedSimilaritiesL.csv")))))
 
 (defn request-result [artist location]
-  (let [events (ev/request-events (util/replace-space artist))]
-    (if-not (nil? (:eventerror events))
-      (list (merge events {:artist artist}))
-      (sort-by #(% :total-score) (map #(get-result %1 %2 location) events (map #(flight/get-flights  % location) events))))))
+  (let [events (ev/request-events (util/replace-space artist))
+        filtered-events (filter #(nil? (:eventerror %)) events)]
+     (if-not (nil? (:eventerror events))
+       (list (merge events {:artist artist}))
+       (when (seq filtered-events)
+         (sort-by #(% :total-score)
+                  (map #(get-result %1 %2 location) filtered-events (map #(flight/get-flights  % location) filtered-events)))))))
 
-;(find-similiar-artists "the rolling stones")
 
 (defn handle-req [artist location]
   (let [artists (find-similiar-artists artist)]

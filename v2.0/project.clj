@@ -26,7 +26,11 @@
                  [clj-time "0.10.0"]
                  [cheshire "5.5.0"]
                  [clj-http "2.0.0"]
-                 [criterium "0.4.3"]]
+                 [criterium "0.4.3"]
+                 [clojure-csv/clojure-csv "2.0.1"]
+                 [org.apache.mahout/mahout-examples "0.11.0"]
+                 [org.apache.mahout/mahout-core "0.9"]
+                 ]
 
   :min-lein-version "2.0.0"
   :uberjar-name "concertesc.jar"

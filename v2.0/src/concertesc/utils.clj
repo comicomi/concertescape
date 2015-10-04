@@ -19,11 +19,11 @@
 (defn replace-space [s]
   (clojure.string/replace s #" " "-"))
 
-(defn get-following-or-preceding-date [operator date]
+(defn get-following-or-preceding-date [operator offset date]
   {:pre [(some #{operator} '(:plus :minus))]}
   (case operator
-    :plus (f/unparse (get-date-formatter "yyyy-MM-dd") (t/plus date (t/days 1)))
-    :minus (f/unparse (get-date-formatter "yyyy-MM-dd") (t/minus date (t/days 1)))))
+    :plus (f/unparse (get-date-formatter "yyyy-MM-dd") (t/plus date (t/days offset)))
+    :minus (f/unparse (get-date-formatter "yyyy-MM-dd") (t/minus date (t/days offset)))))
 
 (defn degrees->radians [x]
   (* (/ Math/PI 180) x))
@@ -42,4 +42,6 @@
        (Math/atan2 (Math/sqrt res)
                    (->> res (- 1) Math/sqrt))))))
 
-(defn now [] (new java.util.Date))
+(defn future-date []
+  (get-following-or-preceding-date :plus 3 (t/now)))
+
