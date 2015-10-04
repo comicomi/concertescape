@@ -14,8 +14,8 @@ The dataset used to build a model for making recommendations about most similar 
 
 Similar artist recommenders that were created based on model previously built use the following measures for similarity:
 
-1. Tanimoto Coefficient
-2. LogLikelihood Similarity
+1. Tanimoto Coefficient;
+2. LogLikelihood Similarity;
 
 The APIs used for getting relevant data for providing user with results about concrets and return flights are the followinf:
 
@@ -34,15 +34,18 @@ The dataset downloaded to build recommendation system contains <user, artist-mbi
 The number of playcount of one artist by the user was divided by the total playcounts of that user. 
 All modifications to originally downloaded dataset were made by creating appropriate formulas in [Excel](https://office.live.com/start/Excel.aspx) tool. After these modifications, new file containing the newly generated artistids and artistnames was created.
 
-3. Technical realization
+3. Application realization
 ========================
 This application was written in programming language Clojure using [Luminus](http://www.luminusweb.net/) framework. LightTable was used as code editor and run and stop commands to the server were issued via OS command line. 
 
-Technical realization of this application can be devided in 3 phases;
-* *Creating Item-to-item recommender* for making recommendations about similar artistss to the user's favorite;
-* *Retrieving events data* based on either recommended artists or queried artist;
-* *Retrieving return flights* to the place where the concert is held *data*;
-* *Displaying results* to the user.
+Application workflow consists of the following 4 steps:
+
+1. *Creating Item-to-item recommender* for making recommendations about similar artists to the user's favorite;
+2. *Retrieving events data* based on either recommended artists or queried artist;
+3. *Retrieving return flights* to the place where the concert is held *data*;
+4. *Displaying results* to the user.
+
+Results are displayed for all the artist similar to the one that user defined as his/her favorite.
 
 4. Acknowledgements 
 ===================
