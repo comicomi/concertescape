@@ -1,6 +1,6 @@
 (ns concertesc.routes.dataset
   (:require [clojure.java.io :as io]
-            [clojure-csv.core :as csv]
+          ;  [clojure-csv.core :as csv]
             [concertesc.utils :as util]
             [concertesc.db.core :as db])
   (:import [java.io File]
@@ -38,8 +38,8 @@
                                     1
                                     (FileSimilarItemsWriter. resultFile)))))
 
-(precompute-recommendations (load-model "./data/preparedData.csv") log-likelihood 5 "./data/precomputedSimilaritiesL.csv")
-(precompute-recommendations (load-model "./data/preparedData.csv") tanimoto 5 "./data/precomputedSimilaritiesT.csv")
+;(precompute-recommendations (load-model "./data/preparedData.csv") log-likelihood 5 "./data/precomputedSimilaritiesL.csv")
+;(precompute-recommendations (load-model "./data/preparedData.csv") tanimoto 5 "./data/precomputedSimilaritiesT.csv")
 
 
 (defn get-precomputed-recommender [modelFile similaritiesFile]
@@ -52,5 +52,5 @@
   (let [rec-builder (proxy [RecommenderBuilder] [] (buildRecommender ([model] (item-recommender model (simfn model)))))]
     (.evaluate (AverageAbsoluteDifferenceRecommenderEvaluator. ) rec-builder nil model 0.7 1.0)))
 
-(evaluate (load-model "./data/preparedData.csv") log-likelihood)
-(evaluate (load-model "./data/preparedData.csv") tanimoto)
+;(evaluate (load-model "./data/preparedData.csv") log-likelihood)
+;(evaluate (load-model "./data/preparedData.csv") tanimoto)

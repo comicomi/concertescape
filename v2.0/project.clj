@@ -27,9 +27,11 @@
                  [cheshire "5.5.0"]
                  [clj-http "2.0.0"]
                  [criterium "0.4.3"]
-                 [clojure-csv/clojure-csv "2.0.1"]
+              ;   [org.clojure/data.csv "0.1.3"]
+                [clojure-csv/clojure-csv "2.0.1"]
                  [org.apache.mahout/mahout-examples "0.11.0"]
                  [org.apache.mahout/mahout-core "0.9"]
+                 ;[org.clojure/data.csv "0.1.3"]
                  ]
 
   :min-lein-version "2.0.0"
@@ -78,4 +80,4 @@
          :repl-options {:init-ns concertesc.core}
          :injections [(require 'pjstadig.humane-test-output)
                       (pjstadig.humane-test-output/activate!)]
-         :env {:dev true}}})
+         :env {:dev false}}})
