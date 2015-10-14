@@ -34,7 +34,13 @@
   (let [dot (apply + (map (fn [[a b]] (* a b)) similiar))
         ina (apply + (->> similiar (map first) (map #(* % %))))
         inb (apply + (->> similiar (map second) (map #(* % %))))]
-  (/ dot (- (+ ina inb) dot))))
+    (/ dot (- (+ ina inb) dot))))
+
+(defn cosine[similiar]
+  (let [dot (apply + (map (fn [[a b]] (* a b)) similiar))
+        nora (Math/sqrt (apply + (->> similiar (map first) (map #(* % %)))))
+        norb (Math/sqrt (apply + (->> similiar (map second) (map #(* % %)))))]
+    (/ dot (* nora norb))))
 
 ;(defn get-mutual[line comparison]
  ; (let [artist (second line)
@@ -61,9 +67,10 @@
         mutual-rankings1  (map #(get-mutual % artists2) artists1)
         filtered (filter #(= false (nil? %)) mutual-rankings1)]
     [user2
-     (if  (and (seq filtered) (> (count filtered) 4))
+     (if (and (seq filtered) (> (count filtered) 4))
      ;  (euclidean filtered)
-        (tanimoto filtered)
+     ;  (tanimoto filtered)
+        (cosine filtered)
        0)]))
 
 (defn get-recommendation [dictionary user n]

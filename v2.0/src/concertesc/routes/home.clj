@@ -17,8 +17,8 @@
   (layout/render "index.html"
                  (merge {:airports (db/get-airports)})))
 
-(defn result-page [[artist location]]
- (pr-str (service/handle-req artist location)))
+;(defn result-page [[artist location]]
+ ;(service/handle-req artist location))
 
 (defn result-page [[artist location]]
   (layout/render "index.html"
