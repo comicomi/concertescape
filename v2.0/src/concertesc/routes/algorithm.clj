@@ -32,14 +32,16 @@
 
 (defn tanimoto[similiar]
   (let [dot (apply + (map (fn [[a b]] (* a b)) similiar))
-        ina (apply + (->> similiar (map first) (map #(* % %))))
-        inb (apply + (->> similiar (map second) (map #(* % %))))]
+        intensity (fn [x] (apply + (->> similiar (map x) (map #(* % %)))))
+        ina (intensity first)
+        inb (intensity second)]
     (/ dot (- (+ ina inb) dot))))
 
 (defn cosine[similiar]
   (let [dot (apply + (map (fn [[a b]] (* a b)) similiar))
-        nora (Math/sqrt (apply + (->> similiar (map first) (map #(* % %)))))
-        norb (Math/sqrt (apply + (->> similiar (map second) (map #(* % %)))))]
+        norm (fn [x] (Math/sqrt (apply + (->> similiar (map x) (map #(* % %))))))
+        nora (norm first)
+        norb (norm second)]
     (/ dot (* nora norb))))
 
 ;(defn get-mutual[line comparison]
@@ -69,7 +71,7 @@
     [user2
      (if (and (seq filtered) (> (count filtered) 4))
      ;  (euclidean filtered)
-     ;  (tanimoto filtered)
+      ; (tanimoto filtered)
         (cosine filtered)
        0)]))
 
