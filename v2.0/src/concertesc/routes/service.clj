@@ -5,7 +5,7 @@
             [concertesc.routes.distance :as dist]
             [concertesc.routes.improvement :as imp]
             [concertesc.routes.artist :as art]
-            [concertesc.routes.dataset :as data]
+          ;  [concertesc.routes.dataset :as data]
             [concertesc.routes.algorithm :as alg]
             [criterium.core :as criterium]))
 
