@@ -5,7 +5,8 @@
             [concertesc.routes.event :as ev]
             [concertesc.routes.distance :as dist]
             [concertesc.routes.artist :as art]
-            [concertesc.routes.dataset :as data]))
+            [concertesc.routes.dataset :as data]
+            [concertesc.routes.algorithm :as alg]))
 
 ;utils
 
@@ -112,3 +113,33 @@
 ;(criterium/with-progress-reporting (criterium/bench (data/get-recommendation 14 5 "./data/preparedData.csv" "./data/precomputedSimilaritiesL.csv") :verbose))
 
 ;(criterium/with-progress-reporting (criterium/bench (data/get-recommendation 14 5 "./data/preparedData.csv" "./data/precomputedSimilaritiesT.csv") :verbose))
+
+;algorithm
+
+;(criterium/with-progress-reporting (criterium/bench (alg/read-data "./data/preparedData.csv") :verbose))
+
+;(criterium/with-progress-reporting (criterium/bench (alg/create-dictionary "./data/preparedData.csv") :verbose))
+
+;(criterium/with-progress-reporting (criterium/bench (alg/create-item-dictionary "./data/preparedData.csv") :verbose))
+
+;(def param (alg/create-item-dictionary "./data/preparedData.csv"))
+
+;(def param1 (param "49624"))
+
+;(def param11 (first (param "49624")))
+
+;(def param2 (param "49610"))
+
+;(def param3 (filter #(= false (nil? %))  (map #(alg/get-mutual % param2) param1)))
+
+;(criterium/with-progress-reporting (criterium/bench (alg/euclidean param3) :verbose))
+
+;(criterium/with-progress-reporting (criterium/bench (alg/tanimoto param3) :verbose))
+
+;(criterium/with-progress-reporting (criterium/bench (alg/cosine param3) :verbose))
+
+;(criterium/with-progress-reporting (criterium/bench (alg/get-mutual param11 param2) :verbose))
+
+;(criterium/with-progress-reporting (criterium/bench (alg/calculate param "49624" "49610") :verbose))
+
+;(criterium/with-progress-reporting (criterium/bench (alg/get-recommendation param "49624" 5) :verbose))

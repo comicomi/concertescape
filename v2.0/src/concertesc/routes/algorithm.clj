@@ -1,17 +1,8 @@
 (ns concertesc.routes.algorithm
   (:require ;[clojure.data.csv :as csv]
             [clojure-csv.core :as csvs]
-         [clojure.java.io :as io])
+            [clojure.java.io :as io])
     (:import [java.lang.Math]))
-
-(defn data-dictionary [user artist]
-  (cons {user artist}
-        (lazy-seq (data-dictionary user artist))))
-
-;(defn create-data-dictionary [data]
- ; (let [dictionary {}]
-  ;  (lazy-seq
-   ;  (map #(create-data-dictionary-entry % dictionary) data))))
 
 (defn read-data [file]
   (map #(->  % csvs/parse-csv first flatten)
@@ -23,17 +14,17 @@
 (defn create-item-dictionary [file]
   (group-by second (read-data file)))
 
-(defn euclidean[similiar]
+(defn euclidean [similiar]
   (/ 1 (+ 1 (Math/sqrt (apply + (map (fn [[a b]] (Math/pow (- a b) 2)) similiar))))))
 
-(defn tanimoto[similiar]
+(defn tanimoto [similiar]
   (let [dot (apply + (map (fn [[a b]] (* a b)) similiar))
         intensity (fn [x] (apply + (->> similiar (map x) (map #(* % %)))))
         ina (intensity first)
         inb (intensity second)]
     (/ dot (- (+ ina inb) dot))))
 
-(defn cosine[similiar]
+(defn cosine [similiar]
   (let [dot (apply + (map (fn [[a b]] (* a b)) similiar))
         norm (fn [x] (Math/sqrt (apply + (->> similiar (map x) (map #(* % %))))))
         nora (norm first)
@@ -52,13 +43,13 @@
   ;  (when (seq found)
    ;   [(first line) [(read-string (last line))  (read-string (first found))]])))
 
-(defn get-mutual[line comparison]
+(defn get-mutual [line comparison]
   (let [artist (first line)
         found (map last (filter #(= artist (first %)) comparison))]
     (when (seq found)
       [(read-string (last line)) (read-string (first found))])))
 
-(defn calculate-euclidean [dictionary user1 user2]
+(defn calculate [dictionary user1 user2]
   (let [artists1 (dictionary user1)
         artists2 (dictionary user2)
         mutual-rankings1  (map #(get-mutual % artists2) artists1)
@@ -72,5 +63,5 @@
 
 (defn get-recommendation [dictionary user n]
   (take n (reverse (sort-by last
-                            (map #(calculate-euclidean dictionary user (key %))
+                            (map #(calculate dictionary user (key %))
                                  (filter #(not= user (key %)) dictionary))))))
