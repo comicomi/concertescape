@@ -37,7 +37,7 @@ All modifications to originally downloaded dataset were made by creating appropr
 
 3. Item-to-item collaborative filtering implementation
 ======================================================
-Since based on user's input, application should recommend concerts and flights for artists who are most similiar to the one whose name user provided as an input, it was needed to create item-to-item recommender. Item-to-item recommender implements  item-based collaborative filtering, in which the similarity between items is calculated based on users ratings of those items. Here two similarity measures were considered:
+Since based on user's input, application should recommend concerts and flights for artists who are most similiar to the one whose name user provided as an input, it was needed to create item-to-item recommender. Created item-to-item recommender implements  item-based collaborative filtering, in which the similarity between items is calculated based on users ratings of those items. Three similarity measures were considered:
 
 1. Euclidean Similarity;
 2. Tanimoto Coefficient;
